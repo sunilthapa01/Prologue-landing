@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prologue — Understand Anything by Touching It</title>
+  <meta name="description" content="Prologue is an interactive visual learning platform. Type any complex concept and interact with real-time simulations to build intuitive understanding.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+  
+  <!-- Styling -->
+  <link rel="stylesheet" href="style.css?v=1.2">
+</head>
+<body>
+
+  <!-- ===================== NAVIGATION ===================== -->
+  <nav class="nav-bar">
+    <div class="nav-container">
+      <a class="nav-logo-link" href="#" id="nav-logo">
+        <!-- Embedded logo inline for fill control -->
+        <svg viewBox="0 0 280 90" width="130" height="42" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Prologue Logo">
+          <path d="M 22 7 C 58 7 76 22 76 45 C 76 68 58 83 22 83 Z" fill="#C93B2B"/>
+          <rect x="10" y="5" width="16" height="80" rx="3" fill="#1E1C1A"/>
+          <text x="94" y="60" font-family="Georgia, serif" font-size="44" fill="#1E1C1A" letter-spacing="3" font-weight="bold">Prologue</text>
+        </svg>
+      </a>
+      <div class="nav-meta-tag">ISSUE NO. 01 / PEDAGOGICAL BLUEPRINT</div>
+      <div class="nav-links">
+        <a href="#problem" id="link-problem">The Cognitive Gap</a>
+        <a href="#sandbox" id="link-sandbox">Interactive Sandbox</a>
+        <a href="#pedagogy" id="link-pedagogy">Our Framework</a>
+        <a href="#architecture" id="link-architecture">Architecture</a>
+        <a href="#cta" class="nav-btn" id="link-cta">Enter the Platform</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===================== HERO SECTION ===================== -->
+  <header class="section-hero" id="hero">
+    <div class="hero-container">
+      <div class="hero-meta">PROLOGUE ESSAYS / SPRING 2026</div>
+      <h1 class="hero-title">We don't solve problems.<br>We show you what they look like.</h1>
+      <p class="hero-subtitle">
+        For the student who stares at a block of static text, hoping it will suddenly make sense. Prologue builds responsive, interactive environments you can touch, stretch, and break. Understand anything by exploring it.
+      </p>
+      <div class="hero-cta-group">
+        <a href="#sandbox" class="btn btn-primary btn-inquiry" id="hero-btn-explore">
+          <!-- Inner clip container for the graph animation -->
+          <span class="btn-glare-shimmer">
+            <!-- Math graph grid and line drawing itself on hover -->
+            <svg class="btn-graph-canvas" viewBox="0 0 200 50" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Grid lines -->
+              <line x1="0" y1="25" x2="200" y2="25" stroke="rgba(250, 247, 242, 0.15)" stroke-width="0.75"/>
+              <line x1="40" y1="0" x2="40" y2="50" stroke="rgba(250, 247, 242, 0.08)" stroke-width="0.5" stroke-dasharray="2 2"/>
+              <line x1="80" y1="0" x2="80" y2="50" stroke="rgba(250, 247, 242, 0.08)" stroke-width="0.5" stroke-dasharray="2 2"/>
+              <line x1="120" y1="0" x2="120" y2="50" stroke="rgba(250, 247, 242, 0.08)" stroke-width="0.5" stroke-dasharray="2 2"/>
+              <line x1="160" y1="0" x2="160" y2="50" stroke="rgba(250, 247, 242, 0.08)" stroke-width="0.5" stroke-dasharray="2 2"/>
+              
+              <!-- Graph curve representing standard plotting -->
+              <path class="graph-curve" d="M 10 38 Q 50 10, 100 28 T 190 12" stroke="rgba(250, 247, 242, 0.4)" stroke-width="2" fill="none" stroke-linecap="round"/>
+              
+              <!-- Tracking coordinate node -->
+              <circle class="graph-point" r="3.5" fill="#C93B2B" stroke="#FAF7F2" stroke-width="1.5"/>
+            </svg>
+          </span>
+          <span class="btn-text">Begin the Inquiry</span>
+        </a>
+        <a href="#cta" class="btn btn-secondary" id="hero-btn-waitlist">Reserve Access</a>
+      </div>
+    </div>
+
+    <!-- The interactive book page turn visual system -->
+    <div class="hero-notebook-viewport">
+      <div class="notebook-shell" id="notebook-trigger">
+        <div class="notebook-page back-page">
+          <!-- Live Canvas simulation exposed inside the notebook as it peels back -->
+          <div class="simulation-reveal-preview">
+            <svg class="preview-svg-grid" viewBox="0 0 400 400" width="100%" height="100%">
+              <defs>
+                <pattern id="grid-pattern" width="20" height="20" patternUnits="userSpaceOnUse">
+                  <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(201, 59, 43, 0.08)" stroke-width="1"/>
+                </pattern>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#grid-pattern)" />
+              <circle cx="200" cy="200" r="80" fill="none" stroke="#C93B2B" stroke-dasharray="4 4" stroke-width="2" />
+              <line x1="200" y1="200" x2="256" y2="144" stroke="#1E1C1A" stroke-width="2" />
+              <circle cx="256" cy="144" r="6" fill="#C93B2B" />
+              <text x="270" y="140" font-family="'DM Sans', sans-serif" font-size="12" fill="#1E1C1A">r = 5.2 cm</text>
+              <text x="140" y="270" font-family="'DM Serif Display', serif" font-size="18" fill="#1E1C1A">Interactive Geometry</text>
+            </svg>
+          </div>
+        </div>
+        <div class="notebook-page front-page" id="notebook-page-front">
+          <!-- Decorative editorial corner brackets -->
+          <span class="nb-corner tl"></span>
+          <span class="nb-corner tr"></span>
+          <span class="nb-corner bl"></span>
+          <span class="nb-corner br"></span>
+
+          <!-- Grid hover trail effect container -->
+          <div class="notebook-grid-effect" id="notebook-grid-effect"></div>
+
+          <div class="front-page-content">
+            <div class="notebook-header">
+              <span class="nb-label">MODULE 12</span>
+              <span class="nb-date">APRIL 2026</span>
+            </div>
+            <h3 class="notebook-title">The Limit of static pages</h3>
+            <p class="notebook-excerpt">
+              For four hundred years, education lived on sheets of paper. We drew three-dimensional coordinate fields on flat planes. We wrote formulas representing acceleration, and expected minds to mentally simulate the motion. Today, we replace static representation with living, interactive models.
+            </p>
+            <div class="notebook-peel-indicator">
+              <span>Scroll to peel open</span>
+              <div class="arrow-down"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== SECTION: THE COGNITIVE GAP ===================== -->
+  <section class="section-problem" id="problem">
+    <div class="grid-container">
+      <div class="sticky-column">
+        <div class="problem-meta">01 / THE COGNITIVE GAP</div>
+        <h2 class="section-heading">Why textbooks fail active minds.</h2>
+        <p class="problem-lead">
+          A static diagram requires mental simulation. You have to imagine how a variable behaves. This creates a massive cognitive burden. Interactive visuals shift that burden from the student to the platform.
+        </p>
+      </div>
+      <div class="scrolling-column">
+        <!-- Row 1: Traditional textbook -->
+        <div class="comparison-card">
+          <div class="card-eyebrow">Traditional Textbook</div>
+          <h4 class="card-title">Three paragraphs of dry notation</h4>
+          <p class="card-desc">
+            "Let a derivative be defined as the limit of the difference quotient as h approaches zero..." A formula is memorized for the exam, but the actual geometric meaning is entirely lost.
+          </p>
+          <div class="mock-ui text-mock">
+            <div class="mock-line"></div>
+            <div class="mock-line"></div>
+            <div class="mock-line half"></div>
+          </div>
+        </div>
+        
+        <!-- Row 2: Video Lecture -->
+        <div class="comparison-card">
+          <div class="card-eyebrow">Passive Video</div>
+          <h4 class="card-title">A six-minute passive timeline</h4>
+          <p class="card-desc">
+            You watch a teacher draw lines on a digital whiteboard. You nod along, but your brain remains in receiver mode. Ten minutes later, you cannot reproduce the logic.
+          </p>
+          <div class="mock-ui video-mock">
+            <div class="video-play-btn"></div>
+            <div class="video-timeline"><div class="video-progress"></div></div>
+          </div>
+        </div>
+
+        <!-- Row 3: Answer Machines (SaaS AI) -->
+        <div class="comparison-card">
+          <div class="card-eyebrow">Answer Machines</div>
+          <h4 class="card-title">Instant solution, zero comprehension</h4>
+          <p class="card-desc">
+            SaaS chatbots spit out step-by-step solutions instantly. You copy-paste it to finish your homework. You get the grade, but your understanding is non-existent.
+          </p>
+          <div class="mock-ui ai-mock">
+            <div class="chat-bubble user">Solve x^2 - 4 = 0</div>
+            <div class="chat-bubble ai">The answers are x = 2 and x = -2. Here are the steps...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== SECTION: INTERACTIVE SANDBOX ===================== -->
+  <section class="section-sandbox" id="sandbox">
+    <div class="sandbox-header center">
+      <div class="sandbox-meta">02 / EXPERIMENTAL ENVIRONMENT</div>
+      <h2 class="section-heading">The Interactive Playground</h2>
+      <p class="section-sub">
+        Interact directly with these real-time models. Drag elements and watch how the equations calculate instantly in response.
+      </p>
+    </div>
+
+    <!-- Tab Buttons -->
+    <div class="sandbox-tabs">
+      <button class="tab-btn active" id="tab-derivative">The Tangent Line (Math)</button>
+      <button class="tab-btn" id="tab-gravity">Newtonian Gravity (Physics)</button>
+    </div>
+
+    <!-- Simulation Workspace -->
+    <div class="sandbox-workspace">
+      <!-- Sim 1: Derivative -->
+      <div class="sim-container active" id="sim-derivative-container">
+        <div class="sim-sidebar">
+          <div class="sim-label">Concept Explainer</div>
+          <h3 class="sim-title">Understanding the Derivative</h3>
+          <p class="sim-explanation">
+            The derivative is the instantaneous rate of change. Don't memorize the formula. Drag the slider to move the point <span class="math-char">P</span> along the curve. Watch the tangent line tilt. The slope updates live.
+          </p>
+          <div class="sim-controls">
+            <label for="derivative-slider">Position along curve (<span class="math-char">x</span>):</label>
+            <input type="range" id="derivative-slider" min="-2" max="2" step="0.05" value="0">
+            <div class="slider-labels">
+              <span>-2.0</span>
+              <span>0.0</span>
+              <span>2.0</span>
+            </div>
+          </div>
+          <div class="sim-telemetry">
+            <div class="telemetry-row">
+              <span>Current X Coordinate:</span>
+              <span class="telemetry-value" id="val-x">0.00</span>
+            </div>
+            <div class="telemetry-row">
+              <span>Current Y Coordinate:</span>
+              <span class="telemetry-value" id="val-y">0.00</span>
+            </div>
+            <div class="telemetry-row highlight">
+              <span>Slope (Derivative dy/dx):</span>
+              <span class="telemetry-value font-serif" id="val-slope" style="color: #C93B2B;">0.00</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="sim-viewport">
+          <canvas id="derivative-canvas" width="500" height="360"></canvas>
+        </div>
+      </div>
+
+      <!-- Sim 2: Gravity -->
+      <div class="sim-container" id="sim-gravity-container">
+        <div class="sim-sidebar">
+          <div class="sim-label">Concept Explainer</div>
+          <h3 class="sim-title">Newton's Law of Gravitation</h3>
+          <p class="sim-explanation">
+            Gravity is an attractive force that increases with mass and drops off drastically with distance. Drag the planet to change its orbit. Drag the mass sliders to watch the gravity vectors recalculate in real-time.
+          </p>
+          <div class="sim-controls">
+            <div class="control-group">
+              <label for="mass-sun-slider">Mass of Star (<span class="math-char">M₁</span>):</label>
+              <input type="range" id="mass-sun-slider" min="50" max="250" step="5" value="150">
+            </div>
+            <div class="control-group">
+              <label for="mass-planet-slider">Mass of Planet (<span class="math-char">M₂</span>):</label>
+              <input type="range" id="mass-planet-slider" min="5" max="50" step="1" value="20">
+            </div>
+          </div>
+          <div class="sim-telemetry">
+            <div class="telemetry-row">
+              <span>Orbital Velocity:</span>
+              <span class="telemetry-value" id="val-gravity-vel">0.00 px/s</span>
+            </div>
+            <div class="telemetry-row">
+              <span>Orbital Radius:</span>
+              <span class="telemetry-value" id="val-gravity-radius">0 px</span>
+            </div>
+            <div class="telemetry-row highlight">
+              <span>Gravitational Force (<span class="math-char">F</span>):</span>
+              <span class="telemetry-value font-serif" id="val-gravity-force" style="color: #C93B2B;">0 N</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="sim-viewport">
+          <canvas id="gravity-canvas" width="500" height="360"></canvas>
+          <div class="canvas-instruction">Drag the blue planet to alter its orbit manually</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== SECTION: PEDAGOGICAL INTEGRITY ===================== -->
+  <section class="section-pedagogy" id="pedagogy">
+    <div class="pedagogy-container">
+      <div class="pedagogy-statement-block">
+        <div class="pedagogy-meta">03 / PEDAGOGICAL CORE</div>
+        <h2 class="pedagogy-large-statement">
+          We are structurally incapable of completing a student's homework.
+        </h2>
+        <p class="pedagogy-supporting-text">
+          Traditional learning tools solve questions for students, fostering dependency. Prologue does the opposite: it generates custom visual models. The student holds the controls and makes the final conclusions.
+        </p>
+      </div>
+
+      <div class="framework-grid">
+        <!-- Feature 1 -->
+        <div class="framework-feature">
+          <div class="feature-num">01</div>
+          <h4 class="feature-title">Predict-Then-Check</h4>
+          <p class="feature-body">
+            Before the simulation snaps into its final state, the student manipulates a ghost element to predict where the regression line falls or the equilibrium shifts. Committing to an outcome first increases memory retention by 4x.
+          </p>
+        </div>
+        <!-- Feature 2 -->
+        <div class="framework-feature">
+          <div class="feature-num">02</div>
+          <h4 class="feature-title">Scaffolded Fading</h4>
+          <p class="feature-body">
+            Early visual sessions offer guided highlights and explanations. As the student demonstrates conceptual growth, the hints are quietly scaled back. Support is present when they stumble, and absent once they fly.
+          </p>
+        </div>
+        <!-- Feature 3 -->
+        <div class="framework-feature">
+          <div class="feature-num">03</div>
+          <h4 class="feature-title">Companion Explanations</h4>
+          <p class="feature-body">
+            Each visual comes with a brief, contextual explanation. Instead of generic textbook definitions, it guides the student on what controls to drag, showing them exactly where to focus their attention to feel the concept.
+          </p>
+        </div>
+      </div>
+
+      <!-- Comparison Matrix -->
+      <div class="comparison-matrix-container">
+        <h3 class="comparison-title">A Different Class of Tool</h3>
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Capability</th>
+              <th>Static Courseware</th>
+              <th>ChatGPT / Gemini</th>
+              <th>Prologue</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="feature-col">Concept Coverage</td>
+              <td>Pre-built lessons only</td>
+              <td>Text answers only</td>
+              <td class="prologue-cell">Any academic topic</td>
+            </tr>
+            <tr>
+              <td class="feature-col">Interaction Type</td>
+              <td>Passive reading / video</td>
+              <td>Boring chatbot prompt</td>
+              <td class="prologue-cell">Draggable simulations</td>
+            </tr>
+            <tr>
+              <td class="feature-col">Cheating Vulnerability</td>
+              <td>Quiz answer keys leaked</td>
+              <td>Highly vulnerable</td>
+              <td class="prologue-cell">Zero (no solutions given)</td>
+            </tr>
+            <tr>
+              <td class="feature-col">Custom Gen Speed</td>
+              <td>Static (cannot scale)</td>
+              <td>Fast but text-only</td>
+              <td class="prologue-cell">Infinite live SVG outputs</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== SECTION: ARCHITECTURE BLUEPRINT ===================== -->
+  <section class="section-architecture" id="architecture">
+    <div class="architecture-container">
+      <div class="arch-header">
+        <div class="arch-meta">04 / CORE ARCHITECTURE</div>
+        <h2 class="section-heading">Designed for zero-marginal cost.</h2>
+        <p class="arch-sub">
+          Generating live code for simulations is expensive. Our layered caching engine matches concepts and delivers responses in milliseconds at near-zero operating costs.
+        </p>
+      </div>
+
+      <!-- Schematic Grid -->
+      <div class="arch-schematic">
+        <!-- SVG schematic diagram dynamically drawn/highlighted -->
+        <svg class="schematic-svg" viewBox="0 0 800 300" width="100%" height="100%">
+          <!-- Flow Line path -->
+          <path id="schematic-flow-line" d="M 50 150 L 170 150 M 290 150 L 410 150 M 530 150 L 650 150" fill="none" stroke="#DDD7CD" stroke-width="2" />
+          <path id="schematic-active-line" d="M 50 150 L 170 150 M 290 150 L 410 150 M 530 150 L 650 150" fill="none" stroke="#C93B2B" stroke-width="2" stroke-dasharray="800" stroke-dashoffset="800" />
+          
+          <!-- Node 1: Input -->
+          <g class="node-group" transform="translate(50, 100)">
+            <rect width="120" height="100" rx="8" fill="#F0EAE1" stroke="#DDD7CD" stroke-width="1.5" />
+            <text x="60" y="35" font-family="'DM Sans', sans-serif" font-weight="bold" font-size="12" fill="#1E1C1A" text-anchor="middle">Student Query</text>
+            <text x="60" y="65" font-family="'DM Sans', sans-serif" font-size="10" fill="#8F8880" text-anchor="middle">"What is a derivative?"</text>
+            <circle cx="120" cy="50" r="4" fill="#C93B2B" />
+          </g>
+
+          <!-- Node 2: Hive Local Cache -->
+          <g class="node-group" transform="translate(210, 100)">
+            <rect width="120" height="100" rx="8" fill="#F0EAE1" stroke="#DDD7CD" stroke-width="1.5" />
+            <text x="60" y="35" font-family="'DM Sans', sans-serif" font-weight="bold" font-size="12" fill="#1E1C1A" text-anchor="middle">Hive Cache</text>
+            <text x="60" y="55" font-family="'DM Sans', sans-serif" font-size="10" fill="#C93B2B" text-anchor="middle">&lt; 50ms (On-Device)</text>
+            <text x="60" y="75" font-family="'DM Sans', sans-serif" font-size="9" fill="#8F8880" text-anchor="middle">Layer 1</text>
+            <circle cx="0" cy="50" r="4" fill="#C93B2B" />
+            <circle cx="120" cy="50" r="4" fill="#C93B2B" />
+          </g>
+
+          <!-- Node 3: PostgreSQL Cache -->
+          <g class="node-group" transform="translate(370, 100)">
+            <rect width="120" height="100" rx="8" fill="#F0EAE1" stroke="#DDD7CD" stroke-width="1.5" />
+            <text x="60" y="35" font-family="'DM Sans', sans-serif" font-weight="bold" font-size="12" fill="#1E1C1A" text-anchor="middle">Postgres Cache</text>
+            <text x="60" y="55" font-family="'DM Sans', sans-serif" font-size="10" fill="#C93B2B" text-anchor="middle">&lt; 300ms (Database)</text>
+            <text x="60" y="75" font-family="'DM Sans', sans-serif" font-size="9" fill="#8F8880" text-anchor="middle">Layer 2</text>
+            <circle cx="0" cy="50" r="4" fill="#C93B2B" />
+            <circle cx="120" cy="50" r="4" fill="#C93B2B" />
+          </g>
+
+          <!-- Node 4: Claude Sonnet Gen -->
+          <g class="node-group" transform="translate(530, 100)">
+            <rect width="120" height="100" rx="8" fill="#1E1C1A" stroke="#1E1C1A" stroke-width="1.5" />
+            <text x="60" y="35" font-family="'DM Sans', sans-serif" font-weight="bold" font-size="12" fill="#FAF7F2" text-anchor="middle">Sonnet Engine</text>
+            <text x="60" y="55" font-family="'DM Sans', sans-serif" font-size="10" fill="#FAF7F2" text-anchor="middle">New Generation</text>
+            <text x="60" y="75" font-family="'DM Sans', sans-serif" font-size="9" fill="#8F8880" text-anchor="middle">Layer 3 (Cache Miss)</text>
+            <circle cx="0" cy="50" r="4" fill="#C93B2B" />
+            <circle cx="120" cy="50" r="4" fill="#C93B2B" />
+          </g>
+
+          <!-- Node 5: Render -->
+          <g class="node-group" transform="translate(690, 100)">
+            <rect width="90" height="100" rx="8" fill="#F0EAE1" stroke="#DDD7CD" stroke-width="1.5" />
+            <text x="45" y="45" font-family="'DM Sans', sans-serif" font-weight="bold" font-size="12" fill="#1E1C1A" text-anchor="middle">Live Visual</text>
+            <text x="45" y="65" font-family="'DM Sans', sans-serif" font-size="10" fill="#C93B2B" text-anchor="middle">Interactive</text>
+            <circle cx="0" cy="50" r="4" fill="#C93B2B" />
+          </g>
+        </svg>
+      </div>
+
+      <!-- Cost Table & System details -->
+      <div class="architecture-specs">
+        <div class="spec-text">
+          <h4>The Four-Layer System</h4>
+          <p>
+            By caching visual HTML templates keyed by a normalized semantic hash (SHA-256), a request for standard educational concepts (e.g., cell division, gravitational orbits) is generated only once. All subsequent students query the database cache directly, reducing API calls and cost by over 98%.
+          </p>
+        </div>
+        <div class="cost-matrix">
+          <div class="cost-header">PROLOGUE RUNTIME COSTS</div>
+          <div class="cost-row">
+            <span>Cache Hit (On-device)</span>
+            <span class="cost-price">$0.0000</span>
+          </div>
+          <div class="cost-row">
+            <span>Cache Hit (PostgreSQL / Edge)</span>
+            <span class="cost-price">$0.0004</span>
+          </div>
+          <div class="cost-row">
+            <span>Prompt Cache Hit (Anthropic)</span>
+            <span class="cost-price">$0.0120</span>
+          </div>
+          <div class="cost-row">
+            <span>Full Generation (Cache Miss)</span>
+            <span class="cost-price">$0.0270</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== SECTION: CONTENT SAFETY LEDGER ===================== -->
+  <section class="section-safety" id="safety">
+    <div class="safety-container">
+      <div class="safety-grid">
+        <div class="safety-copy">
+          <div class="safety-meta">05 / INSTITUTIONAL CONTROL</div>
+          <h2 class="section-heading">Prudently moderated.<br>Audit trails by default.</h2>
+          <p class="safety-desc">
+            To be adopted by school districts, platforms must assure safety. Prologue routes all raw prompts through a single fast classification call (Claude Haiku).
+          </p>
+          <div class="safety-points">
+            <div class="safety-point">
+              <strong>Block Cheat Requests:</strong> Inputs seeking exact answers to questions (rather than conceptual visual support) are blocked.
+            </div>
+            <div class="safety-point">
+              <strong>Audit Trail Logs:</strong> Blocked attempts are recorded with SHA-256 matching keys to show administrators detailed telemetry logs.
+            </div>
+          </div>
+        </div>
+        
+        <div class="safety-ledger">
+          <div class="ledger-header">
+            <span>AUDIT TRAIL LOG RECORD (SIMULATED)</span>
+            <span class="status-indicator">ONLINE</span>
+          </div>
+          <div class="ledger-table-wrapper">
+            <table class="ledger-table">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Raw Prompt Query</th>
+                  <th>Classification</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>14:12:05</td>
+                  <td>"What is centripetal acceleration?"</td>
+                  <td>Educational / Physics</td>
+                  <td class="status-allowed">ALLOWED</td>
+                </tr>
+                <tr>
+                  <td>14:13:21</td>
+                  <td>"Write my essay about the cold war"</td>
+                  <td>Academic Cheat Attempt</td>
+                  <td class="status-blocked">BLOCKED</td>
+                </tr>
+                <tr>
+                  <td>14:14:45</td>
+                  <td>"Explain cellular respiration slider"</td>
+                  <td>Educational / Biology</td>
+                  <td class="status-allowed">ALLOWED</td>
+                </tr>
+                <tr>
+                  <td>14:16:10</td>
+                  <td>"Give me answer key to exam paper"</td>
+                  <td>Malicious / Exam Cheat</td>
+                  <td class="status-blocked">BLOCKED</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== SECTION: CTA / JOIN WAITLIST ===================== -->
+  <section class="section-cta" id="cta">
+    <div class="cta-inner">
+      <div class="cta-grid">
+        <div class="cta-copy">
+          <div class="cta-meta font-serif">Inquiry No. 1</div>
+          <h2 class="cta-heading">Enter the Next Chapter.</h2>
+          <p class="cta-sub">
+            Join the waitlist to receive access to the active learning workbook. Discover the difference between reading and understanding.
+          </p>
+        </div>
+        <div class="cta-form-container">
+          <form class="cta-form" id="waitlist-form" onsubmit="event.preventDefault(); alert('Thank you for reserving your spot with Prologue.');">
+            <div class="form-group">
+              <label for="student-name">Your Name</label>
+              <input type="text" id="student-name" placeholder="E.g., Alan Turing" required>
+            </div>
+            <div class="form-group">
+              <label for="student-email">Email Address</label>
+              <input type="email" id="student-email" placeholder="E.g., alan@domain.edu" required>
+            </div>
+            <div class="form-group">
+              <label for="student-role">Learning Role</label>
+              <select id="student-role" required>
+                <option value="" disabled selected>Select your profile</option>
+                <option value="student">Student</option>
+                <option value="educator">Educator / Teacher</option>
+                <option value="parent">Parent</option>
+                <option value="administrator">School Administrator</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block" id="form-submit-btn">Reserve Waitlist Spot</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <!-- Logo -->
+        <svg viewBox="0 0 280 90" width="130" height="42" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Prologue Logo Footer">
+          <path d="M 22 7 C 58 7 76 22 76 45 C 76 68 58 83 22 83 Z" fill="#C93B2B"/>
+          <rect x="10" y="5" width="16" height="80" rx="3" fill="#FAF7F2"/>
+          <text x="94" y="60" font-family="Georgia, serif" font-size="44" fill="#FAF7F2" letter-spacing="3" font-weight="bold">Prologue</text>
+        </svg>
+        <p class="footer-motto">
+          "Don't read it. Touch it."
+        </p>
+      </div>
+      
+      <div class="footer-links-grid">
+        <div class="footer-col">
+          <h5>Core System</h5>
+          <a href="#problem">The Cognitive Gap</a>
+          <a href="#sandbox">Interactive Sandbox</a>
+          <a href="#pedagogy">Framework</a>
+        </div>
+        <div class="footer-col">
+          <h5>Architecture</h5>
+          <a href="#architecture">Caching Specs</a>
+          <a href="#safety">Content Safety</a>
+          <a href="https://github.com/notnishant" target="_blank" rel="noopener">GitHub</a>
+        </div>
+        <div class="footer-col">
+          <h5>Legal</h5>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Institutional Terms</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-bottom-container">
+        <span>© 2026 Prologue, Inc. All rights reserved. Created by notnishant.</span>
+        <span>Issue No. 01 / April 2026 / Version 1.0.0</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===================== SCRIPTS ===================== -->
+  <!-- GSAP for scroll driven page folds and editorial animations -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <!-- Local JS -->
+  <script src="script.js?v=1.2"></script>
+</body>
+</html>
