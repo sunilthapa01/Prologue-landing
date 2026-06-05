@@ -152,13 +152,14 @@ export default function Home() {
               <text x="94" y="60" fontFamily="Georgia, serif" fontSize="44" fill="var(--ink)" letterSpacing="3" fontWeight="bold">Prologue</text>
             </svg>
           </a>
-          <div className="nav-meta-tag">ISSUE NO. 01 / PEDAGOGICAL BLUEPRINT</div>
           <div className="nav-links">
-            <a href="#problem" id="link-problem">The Cognitive Gap</a>
-            <a href="#sandbox" id="link-sandbox">Interactive Sandbox</a>
-            <a href="#pedagogy" id="link-pedagogy">Our Framework</a>
-            <a href="#concept-map" id="link-architecture">Concept Map</a>
-            <a href="#cta" className="nav-btn" id="link-cta">Enter the Platform</a>
+            <a href="#safety" id="link-how">How It Works</a>
+            <a href="#sandbox" id="link-explore">Explore</a>
+            <a href="#pedagogy" id="link-why">Why Prologue</a>
+          </div>
+          <div className="nav-actions">
+            <a href="#" className="nav-login" id="link-login">Log In</a>
+            <a href="#cta" className="nav-btn" id="link-cta">Get Started</a>
           </div>
         </div>
       </nav>
