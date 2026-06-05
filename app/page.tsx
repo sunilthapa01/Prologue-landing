@@ -19,6 +19,49 @@ export default function Home() {
   const [waitlistEmail, setWaitlistEmail] = useState('');
   const [waitlistRole, setWaitlistRole] = useState('');
   const [waitlistSubmitted, setWaitlistSubmitted] = useState(false);
+  const [activeConcept, setActiveConcept] = useState<'gravity' | 'goldenRatio' | 'printingPress'>('gravity');
+
+  const conceptData = {
+    gravity: {
+      title: 'Gravity',
+      subjects: {
+        physics: { hook: 'Force & Orbits', desc: 'Understand forces, orbital motion, and gravitational fields.' },
+        astronomy: { hook: 'Black Holes', desc: 'Trace the birth of stars, galaxies, and black holes.' },
+        mathematics: { hook: 'Calculus of Curves', desc: 'Express curves using Newton\'s calculus and differential equations.' },
+        philosophy: { hook: 'The Pinned Universe', desc: 'Inquire about determinism and the clockwork universe model.' },
+        design: { hook: 'Visual Weight & Mass', desc: 'Visualize structural balance, weight distribution, and mass.' },
+        computerScience: { hook: 'Physics Engines', desc: 'Simulate particle physics and N-body collisions in code.' },
+        psychology: { hook: 'Perceiving Balance', desc: 'Study spatial perception and how humans feel balance and weight.' },
+        history: { hook: 'Newton\'s Apple', desc: 'Understand Newton\'s plague-year discovery and Einstein\'s relativity leap.' },
+      }
+    },
+    goldenRatio: {
+      title: 'Golden Ratio',
+      subjects: {
+        physics: { hook: 'Spiral Hurricanes', desc: 'Discover patterns in spiral hurricanes and crystal structures.' },
+        astronomy: { hook: 'Planetary Harmony', desc: 'Explore orbital resonances and planetary alignments.' },
+        mathematics: { hook: 'Fibonacci Sequence', desc: 'Analyze the Fibonacci sequence and infinite nested fractions.' },
+        philosophy: { hook: 'Theory of Beauty', desc: 'Contemplate aesthetic theories, natural harmony, and beauty.' },
+        design: { hook: 'The Divine Grid', desc: 'Apply the divine proportion to layouts, grids, and typography.' },
+        computerScience: { hook: 'Golden Section Search', desc: 'Optimize search algorithms using golden section methods.' },
+        psychology: { hook: 'Symmetry Preference', desc: 'Examine human preferences for facial and architectural symmetry.' },
+        history: { hook: 'Renaissance Masterpieces', desc: 'Trace usage from Greek architecture to Renaissance masterpieces.' },
+      }
+    },
+    printingPress: {
+      title: 'Printing Press',
+      subjects: {
+        physics: { hook: 'Optics & Lenses', desc: 'Develop optical lenses for typesetting and press machinery.' },
+        astronomy: { hook: 'Planetary Tables', desc: 'Distribute planetary tables and Kepler\'s astronomical treatises.' },
+        mathematics: { hook: 'Grid Geometry', desc: 'Standardize geometric typeface design and typesetting grids.' },
+        philosophy: { hook: 'The Enlightenment', desc: 'Observe the rise of individualism, rationalism, and the Enlightenment.' },
+        design: { hook: 'Typography Systems', desc: 'Evolve grid systems, typeface anatomy, and page proportions.' },
+        computerScience: { hook: 'Text & Hashing', desc: 'Pioneer text encoding, data storage, and Gutenberg hashing.' },
+        psychology: { hook: 'The Literate Mind', desc: 'Study how literacy reshaped memory, learning, and human cognition.' },
+        history: { hook: 'Information Age 1.0', desc: 'Examine the shift from handwritten manuscripts to mass information.' },
+      }
+    }
+  };
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -37,7 +80,7 @@ export default function Home() {
 
     tlHero.to('.hero-container', {
       opacity: 0,
-      y: -60,
+      y: -100,
       duration: 0.5,
     }, 0);
 
@@ -50,37 +93,12 @@ export default function Home() {
 
     tlHero.to('.notebook-shell', {
       scale: 1.05,
+      y: -360,
       boxShadow: '0 40px 80px rgba(30, 28, 26, 0.2)',
       duration: 1,
     }, 0.1);
 
-    // Schematic active line flow
-    const schematicLine = document.getElementById('schematic-active-line');
-    const archSection = document.getElementById('architecture');
-    if (schematicLine && archSection) {
-      gsap.to(schematicLine, {
-        strokeDashoffset: 0,
-        ease: 'power2.inOut',
-        scrollTrigger: {
-          trigger: archSection,
-          start: 'top 60%',
-          end: 'top 20%',
-          scrub: 1.5,
-        }
-      });
-
-      gsap.from('.node-group', {
-        opacity: 0.3,
-        scale: 0.95,
-        stagger: 0.1,
-        duration: 0.8,
-        scrollTrigger: {
-          trigger: archSection,
-          start: 'top 70%',
-          toggleActions: 'play none none reverse',
-        }
-      });
-    }
+    // Concept Map animations are handled reactively in a separate hook below to prevent scroll-pin issues.
 
     // Heading fade-ins
     gsap.utils.toArray('.section-heading').forEach((heading: any) => {
@@ -97,6 +115,26 @@ export default function Home() {
     });
   }, { scope: containerRef });
 
+  useGSAP(() => {
+    // Stagger cards entrance whenever activeConcept changes
+    gsap.fromTo('.subject-card',
+      { opacity: 0, y: 20, scale: 0.96 },
+      { opacity: 1, y: 0, scale: 1, stagger: 0.05, duration: 0.5, ease: 'power2.out', overwrite: 'auto' }
+    );
+    
+    // Quick elastic scale on the central orb
+    gsap.fromTo('.central-orb',
+      { scale: 0.9 },
+      { scale: 1, duration: 0.5, ease: 'back.out(1.8)', overwrite: 'auto' }
+    );
+
+    // Fade in background connecting lines
+    gsap.fromTo('.concept-map-backdrop-svg path',
+      { opacity: 0.2 },
+      { opacity: 1, duration: 0.8, stagger: 0.03, ease: 'power1.out', overwrite: 'auto' }
+    );
+  }, { dependencies: [activeConcept], scope: containerRef });
+
   const handleWaitlistSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setWaitlistSubmitted(true);
@@ -109,9 +147,9 @@ export default function Home() {
         <div className="nav-container">
           <a className="nav-logo-link" href="#" id="nav-logo">
             <svg viewBox="0 0 280 90" width="130" height="42" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Prologue Logo">
-              <path d="M 22 7 C 58 7 76 22 76 45 C 76 68 58 83 22 83 Z" fill="#C93B2B"/>
-              <rect x="10" y="5" width="16" height="80" rx="3" fill="#1E1C1A"/>
-              <text x="94" y="60" fontFamily="Georgia, serif" fontSize="44" fill="#1E1C1A" letterSpacing="3" fontWeight="bold">Prologue</text>
+              <path d="M 22 7 C 58 7 76 22 76 45 C 76 68 58 83 22 83 Z" fill="var(--vermillion)"/>
+              <rect x="10" y="5" width="16" height="80" rx="3" fill="var(--ink)"/>
+              <text x="94" y="60" fontFamily="Georgia, serif" fontSize="44" fill="var(--ink)" letterSpacing="3" fontWeight="bold">Prologue</text>
             </svg>
           </a>
           <div className="nav-meta-tag">ISSUE NO. 01 / PEDAGOGICAL BLUEPRINT</div>
@@ -119,7 +157,7 @@ export default function Home() {
             <a href="#problem" id="link-problem">The Cognitive Gap</a>
             <a href="#sandbox" id="link-sandbox">Interactive Sandbox</a>
             <a href="#pedagogy" id="link-pedagogy">Our Framework</a>
-            <a href="#architecture" id="link-architecture">Architecture</a>
+            <a href="#concept-map" id="link-architecture">Concept Map</a>
             <a href="#cta" className="nav-btn" id="link-cta">Enter the Platform</a>
           </div>
         </div>
@@ -155,15 +193,15 @@ export default function Home() {
                 <svg className="preview-svg-grid" viewBox="0 0 400 400" width="100%" height="100%">
                   <defs>
                     <pattern id="grid-pattern" width="20" height="20" patternUnits="userSpaceOnUse">
-                      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(201, 59, 43, 0.08)" strokeWidth="1"/>
+                      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(212, 71, 42, 0.15)" strokeWidth="1"/>
                     </pattern>
                   </defs>
                   <rect width="100%" height="100%" fill="url(#grid-pattern)" />
-                  <circle cx="200" cy="200" r="80" fill="none" stroke="#C93B2B" strokeDasharray="4 4" strokeWidth="2" />
-                  <line x1="200" y1="200" x2="256" y2="144" stroke="#1E1C1A" strokeWidth="2" />
-                  <circle cx="256" cy="144" r="6" fill="#C93B2B" />
-                  <text x="270" y="140" fontFamily="'DM Sans', sans-serif" fontSize="12" fill="#1E1C1A">r = 5.2 cm</text>
-                  <text x="140" y="270" fontFamily="'DM Serif Display', serif" fontSize="18" fill="#1E1C1A">Interactive Geometry</text>
+                  <circle cx="200" cy="200" r="80" fill="none" stroke="var(--vermillion)" strokeDasharray="4 4" strokeWidth="2" />
+                  <line x1="200" y1="200" x2="256" y2="144" stroke="var(--ink)" strokeWidth="2" />
+                  <circle cx="256" cy="144" r="6" fill="var(--vermillion)" />
+                  <text x="270" y="140" fontFamily="'DM Sans', sans-serif" fontSize="12" fill="var(--ink)">r = 5.2 cm</text>
+                  <text x="140" y="270" fontFamily="'DM Serif Display', serif" fontSize="18" fill="var(--ink)">Interactive Geometry</text>
                 </svg>
               </div>
             </div>
@@ -362,148 +400,311 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===================== SECTION: ARCHITECTURE BLUEPRINT ===================== */}
-      <section className="section-architecture" id="architecture">
-        <div className="architecture-container">
+      {/* ===================== SECTION: CONCEPT MAP ===================== */}
+      <section className="section-concept-map" id="concept-map">
+        <div className="concept-map-container">
           <div className="arch-header">
-            <div className="arch-meta">04 / CORE ARCHITECTURE</div>
-            <h2 className="section-heading">Designed for zero-marginal cost.</h2>
+            <div className="arch-meta">04 / INTERDISCIPLINARY WEB</div>
+            <h2 className="section-heading">Understand anything in context.</h2>
             <p className="arch-sub">
-              Generating live code for simulations is expensive. Our layered caching engine matches concepts and delivers responses in milliseconds at near-zero operating costs.
+              Concepts do not live in isolation. Prologue maps the connections between disciplines, letting you trace how a single idea branches into mathematics, design, physics, or philosophy.
             </p>
           </div>
 
-          {/* Schematic Grid */}
-          <div className="arch-schematic">
-            <svg className="schematic-svg" viewBox="0 0 800 300" width="100%" height="100%">
-              {/* Flow Line path */}
-              <path id="schematic-flow-line" d="M 50 150 L 170 150 M 290 150 L 410 150 M 530 150 L 650 150" fill="none" stroke="#DDD7CD" strokeWidth="2" />
-              <path id="schematic-active-line" d="M 50 150 L 170 150 M 290 150 L 410 150 M 530 150 L 650 150" fill="none" stroke="#C93B2B" strokeWidth="2" strokeDasharray="800" strokeDashoffset="800" />
-              
-              {/* Node 1: Input */}
-              <g className="node-group" transform="translate(50, 100)">
-                <rect width="120" height="100" rx="8" fill="#F0EAE1" stroke="#DDD7CD" strokeWidth="1.5" />
-                <text x="60" y="35" fontFamily="'DM Sans', sans-serif" fontWeight="bold" fontSize="12" fill="#1E1C1A" textAnchor="middle">Student Query</text>
-                <text x="60" y="65" fontFamily="'DM Sans', sans-serif" fontSize="10" fill="#8F8880" textAnchor="middle">"What is a derivative?"</text>
-                <circle cx="120" cy="50" r="4" fill="#C93B2B" />
-              </g>
-
-              {/* Node 2: Hive Local Cache */}
-              <g className="node-group" transform="translate(210, 100)">
-                <rect width="120" height="100" rx="8" fill="#F0EAE1" stroke="#DDD7CD" strokeWidth="1.5" />
-                <text x="60" y="35" fontFamily="'DM Sans', sans-serif" fontWeight="bold" fontSize="12" fill="#1E1C1A" textAnchor="middle">Hive Cache</text>
-                <text x="60" y="55" fontFamily="'DM Sans', sans-serif" fontSize="10" fill="#C93B2B" textAnchor="middle">&lt; 50ms (On-Device)</text>
-                <text x="60" y="75" fontFamily="'DM Sans', sans-serif" fontSize="9" fill="#8F8880" textAnchor="middle">Layer 1</text>
-                <circle cx="0" cy="50" r="4" fill="#C93B2B" />
-                <circle cx="120" cy="50" r="4" fill="#C93B2B" />
-              </g>
-
-              {/* Node 3: PostgreSQL Cache */}
-              <g className="node-group" transform="translate(370, 100)">
-                <rect width="120" height="100" rx="8" fill="#F0EAE1" stroke="#DDD7CD" stroke-width="1.5" />
-                <text x="60" y="35" fontFamily="'DM Sans', sans-serif" fontWeight="bold" fontSize="12" fill="#1E1C1A" textAnchor="middle">Postgres Cache</text>
-                <text x="60" y="55" fontFamily="'DM Sans', sans-serif" fontSize="10" fill="#C93B2B" textAnchor="middle">&lt; 300ms (Database)</text>
-                <text x="60" y="75" fontFamily="'DM Sans', sans-serif" fontSize="9" fill="#8F8880" text-anchor="middle">Layer 2</text>
-                <circle cx="0" cy="50" r="4" fill="#C93B2B" />
-                <circle cx="120" cy="50" r="4" fill="#C93B2B" />
-              </g>
-
-              {/* Node 4: Claude Sonnet Gen */}
-              <g className="node-group" transform="translate(530, 100)">
-                <rect width="120" height="100" rx="8" fill="#1E1C1A" stroke="#1E1C1A" strokeWidth="1.5" />
-                <text x="60" y="35" fontFamily="'DM Sans', sans-serif" fontWeight="bold" fontSize="12" fill="#FAF7F2" textAnchor="middle">Sonnet Engine</text>
-                <text x="60" y="55" fontFamily="'DM Sans', sans-serif" fontSize="10" fill="#FAF7F2" text-anchor="middle">New Generation</text>
-                <text x="60" y="75" fontFamily="'DM Sans', sans-serif" fontSize="9" fill="#8F8880" text-anchor="middle">Layer 3 (Cache Miss)</text>
-                <circle cx="0" cy="50" r="4" fill="#C93B2B" />
-                <circle cx="120" cy="50" r="4" fill="#C93B2B" />
-              </g>
-
-              {/* Node 5: Render */}
-              <g className="node-group" transform="translate(690, 100)">
-                <rect width="90" height="100" rx="8" fill="#F0EAE1" stroke="#DDD7CD" strokeWidth="1.5" />
-                <text x="45" y="45" fontFamily="'DM Sans', sans-serif" fontWeight="bold" fontSize="12" fill="#1E1C1A" text-anchor="middle">Live Visual</text>
-                <text x="45" y="65" fontFamily="'DM Sans', sans-serif" fontSize="10" fill="#C93B2B" text-anchor="middle">Interactive</text>
-                <circle cx="0" cy="50" r="4" fill="#C93B2B" />
-              </g>
-            </svg>
+          <div className="concept-selectors">
+            <button 
+              className={`selector-btn ${activeConcept === 'gravity' ? 'active' : ''}`} 
+              onClick={() => setActiveConcept('gravity')}
+            >
+              Gravity
+            </button>
+            <button 
+              className={`selector-btn ${activeConcept === 'goldenRatio' ? 'active' : ''}`} 
+              onClick={() => setActiveConcept('goldenRatio')}
+            >
+              Golden Ratio
+            </button>
+            <button 
+              className={`selector-btn ${activeConcept === 'printingPress' ? 'active' : ''}`} 
+              onClick={() => setActiveConcept('printingPress')}
+            >
+              Printing Press
+            </button>
           </div>
 
-          {/* Cost Table & System details */}
-          <div className="architecture-specs">
-            <div className="spec-text">
-              <h4>The Four-Layer System</h4>
-              <p>
-                By caching visual HTML templates keyed by a normalized semantic hash (SHA-256), a request for standard educational concepts (e.g., cell division, gravitational orbits) is generated only once. All subsequent students query the database cache directly, reducing API calls and cost by over 98%.
-              </p>
+          <div className="concept-map-visual">
+            {/* SVG Backdrop connecting lines */}
+            <svg className="concept-map-backdrop-svg" viewBox="0 0 1000 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+              {/* Concentric orbit lines */}
+              <circle cx="500" cy="300" r="140" stroke="rgba(201, 59, 43, 0.12)" strokeWidth="1" />
+              <circle cx="500" cy="300" r="240" stroke="rgba(201, 59, 43, 0.08)" strokeWidth="1" strokeDasharray="6,6" />
+              <circle cx="500" cy="300" r="340" stroke="rgba(201, 59, 43, 0.04)" strokeWidth="1" />
+              
+              {/* Connecting paths */}
+              <path d="M 500 300 L 500 70" stroke="rgba(201, 59, 43, 0.12)" strokeWidth="1.5" strokeDasharray="4,4" />
+              <path d="M 500 300 L 780 150" stroke="rgba(201, 59, 43, 0.12)" strokeWidth="1.5" strokeDasharray="4,4" />
+              <path d="M 500 300 L 860 300" stroke="rgba(201, 59, 43, 0.12)" strokeWidth="1.5" strokeDasharray="4,4" />
+              <path d="M 500 300 L 780 450" stroke="rgba(201, 59, 43, 0.12)" strokeWidth="1.5" strokeDasharray="4,4" />
+              <path d="M 500 300 L 500 530" stroke="rgba(201, 59, 43, 0.12)" strokeWidth="1.5" strokeDasharray="4,4" />
+              <path d="M 500 300 L 220 450" stroke="rgba(201, 59, 43, 0.12)" strokeWidth="1.5" strokeDasharray="4,4" />
+              <path d="M 500 300 L 140 300" stroke="rgba(201, 59, 43, 0.12)" strokeWidth="1.5" strokeDasharray="4,4" />
+              <path d="M 500 300 L 220 150" stroke="rgba(201, 59, 43, 0.12)" strokeWidth="1.5" strokeDasharray="4,4" />
+
+              {/* Dotted nodes */}
+              <circle cx="500" cy="180" r="5" fill="var(--vermillion)" />
+              <circle cx="640" cy="225" r="5" fill="var(--vermillion)" />
+              <circle cx="680" cy="300" r="5" fill="var(--vermillion)" />
+              <circle cx="640" cy="375" r="5" fill="var(--vermillion)" />
+              <circle cx="500" cy="420" r="5" fill="var(--vermillion)" />
+              <circle cx="360" cy="375" r="5" fill="var(--vermillion)" />
+              <circle cx="320" cy="300" r="5" fill="var(--vermillion)" />
+              <circle cx="360" cy="225" r="5" fill="var(--vermillion)" />
+            </svg>
+
+            {/* Glowing backdrop behind central orb */}
+            <div className="orb-glow"></div>
+
+            {/* Center Orb */}
+            <div className="central-orb-container">
+              <div className="central-orb">
+                <span className="orb-eyebrow">Core Concept</span>
+                <span className="orb-title">{conceptData[activeConcept].title}</span>
+              </div>
             </div>
-            <div className="cost-matrix">
-              <div className="cost-header">PROLOGUE RUNTIME COSTS</div>
-              <div className="cost-row">
-                <span>Cache Hit (On-device)</span>
-                <span className="cost-price">$0.0000</span>
+
+            {/* Surrounding Cards container */}
+            <div className="concept-cards-grid">
+              {/* Physics */}
+              <div 
+                className="subject-card card-physics"
+                style={{ '--card-glow-color': '#c93b2b', '--card-bg-light': '#fceceb' } as React.CSSProperties}
+              >
+                <div className="subject-card-icon">
+                  <svg viewBox="0 0 24 24" width="18" height="18" stroke="#c93b2b" strokeWidth="2.5" fill="none">
+                    <circle cx="12" cy="12" r="3"/>
+                    <ellipse cx="12" cy="12" rx="9" ry="3" transform="rotate(30, 12, 12)"/>
+                    <ellipse cx="12" cy="12" rx="9" ry="3" transform="rotate(-30, 12, 12)"/>
+                  </svg>
+                </div>
+                <div className="subject-card-info">
+                  <span className="subject-card-title">Physics</span>
+                  <div key={activeConcept} className="subject-card-desc">
+                    <strong className="subject-card-hook">{conceptData[activeConcept].subjects.physics.hook}</strong>
+                    <p className="subject-card-text">{conceptData[activeConcept].subjects.physics.desc}</p>
+                  </div>
+                </div>
               </div>
-              <div className="cost-row">
-                <span>Cache Hit (PostgreSQL / Edge)</span>
-                <span className="cost-price">$0.0004</span>
+
+              {/* Astronomy */}
+              <div 
+                className="subject-card card-astronomy"
+                style={{ '--card-glow-color': '#1d83e0', '--card-bg-light': '#e6f3ff' } as React.CSSProperties}
+              >
+                <div className="subject-card-icon">
+                  <svg viewBox="0 0 24 24" width="18" height="18" stroke="#1d83e0" strokeWidth="2.5" fill="none">
+                    <circle cx="12" cy="12" r="6"/>
+                    <path d="M 4 15 C 8 18 16 18 20 15" transform="rotate(-15, 12, 12)"/>
+                  </svg>
+                </div>
+                <div className="subject-card-info">
+                  <span className="subject-card-title">Astronomy</span>
+                  <div key={activeConcept} className="subject-card-desc">
+                    <strong className="subject-card-hook">{conceptData[activeConcept].subjects.astronomy.hook}</strong>
+                    <p className="subject-card-text">{conceptData[activeConcept].subjects.astronomy.desc}</p>
+                  </div>
+                </div>
               </div>
-              <div className="cost-row">
-                <span>Prompt Cache Hit (Anthropic)</span>
-                <span className="cost-price">$0.0120</span>
+
+              {/* History */}
+              <div 
+                className="subject-card card-history"
+                style={{ '--card-glow-color': '#e66a15', '--card-bg-light': '#fff3eb' } as React.CSSProperties}
+              >
+                <div className="subject-card-icon">
+                  <svg viewBox="0 0 24 24" width="18" height="18" stroke="#e66a15" strokeWidth="2.5" fill="none">
+                    <line x1="3" y1="20" x2="21" y2="20"/>
+                    <line x1="4" y1="6" x2="20" y2="6"/>
+                    <path d="M 4 6 L 12 2 L 20 6"/>
+                    <line x1="6" y1="6" x2="6" y2="20"/>
+                    <line x1="10" y1="6" x2="10" y2="20"/>
+                    <line x1="14" y1="6" x2="14" y2="20"/>
+                    <line x1="18" y1="6" x2="18" y2="20"/>
+                  </svg>
+                </div>
+                <div className="subject-card-info">
+                  <span className="subject-card-title">History</span>
+                  <div key={activeConcept} className="subject-card-desc">
+                    <strong className="subject-card-hook">{conceptData[activeConcept].subjects.history.hook}</strong>
+                    <p className="subject-card-text">{conceptData[activeConcept].subjects.history.desc}</p>
+                  </div>
+                </div>
               </div>
-              <div className="cost-row">
-                <span>Full Generation (Cache Miss)</span>
-                <span className="cost-price" style={{ color: '#C93B2B' }}>$0.0240</span>
+
+              {/* Philosophy */}
+              <div 
+                className="subject-card card-philosophy"
+                style={{ '--card-glow-color': '#7c3aed', '--card-bg-light': '#f5f0ff' } as React.CSSProperties}
+              >
+                <div className="subject-card-icon">
+                  <svg viewBox="0 0 24 24" width="18" height="18" stroke="#7c3aed" strokeWidth="2.5" fill="none">
+                    <path d="M 12 2 C 7.5 2 4 5.5 4 10 C 4 13.5 6 15 7 16 L 8 20 H 16 L 17 16 C 18 15 20 13.5 20 10 C 20 5.5 16.5 2 12 2 Z"/>
+                    <circle cx="12" cy="10" r="2"/>
+                  </svg>
+                </div>
+                <div className="subject-card-info">
+                  <span className="subject-card-title">Philosophy</span>
+                  <div key={activeConcept} className="subject-card-desc">
+                    <strong className="subject-card-hook">{conceptData[activeConcept].subjects.philosophy.hook}</strong>
+                    <p className="subject-card-text">{conceptData[activeConcept].subjects.philosophy.desc}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Design */}
+              <div 
+                className="subject-card card-design"
+                style={{ '--card-glow-color': '#ec4899', '--card-bg-light': '#fdf2f8' } as React.CSSProperties}
+              >
+                <div className="subject-card-icon">
+                  <svg viewBox="0 0 24 24" width="18" height="18" stroke="#ec4899" strokeWidth="2.5" fill="none">
+                    <path d="M 12 2 L 20 7 L 20 17 L 12 22 L 4 17 L 4 7 Z"/>
+                    <line x1="12" y1="2" x2="12" y2="22"/>
+                    <line x1="4" y1="7" x2="12" y2="12"/>
+                    <line x1="20" y1="7" x2="12" y2="12"/>
+                  </svg>
+                </div>
+                <div className="subject-card-info">
+                  <span className="subject-card-title">Design</span>
+                  <div key={activeConcept} className="subject-card-desc">
+                    <strong className="subject-card-hook">{conceptData[activeConcept].subjects.design.hook}</strong>
+                    <p className="subject-card-text">{conceptData[activeConcept].subjects.design.desc}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Computer Science */}
+              <div 
+                className="subject-card card-cs"
+                style={{ '--card-glow-color': '#10b981', '--card-bg-light': '#ecfdf5' } as React.CSSProperties}
+              >
+                <div className="subject-card-icon">
+                  <svg viewBox="0 0 24 24" width="18" height="18" stroke="#10b981" strokeWidth="2.5" fill="none">
+                    <path d="M 8 6 L 2 12 L 8 18"/>
+                    <path d="M 16 6 L 22 12 L 16 18"/>
+                    <line x1="14" y1="4" x2="10" y2="20"/>
+                  </svg>
+                </div>
+                <div className="subject-card-info">
+                  <span className="subject-card-title">Computer Science</span>
+                  <div key={activeConcept} className="subject-card-desc">
+                    <strong className="subject-card-hook">{conceptData[activeConcept].subjects.computerScience.hook}</strong>
+                    <p className="subject-card-text">{conceptData[activeConcept].subjects.computerScience.desc}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Psychology */}
+              <div 
+                className="subject-card card-psychology"
+                style={{ '--card-glow-color': '#ef4444', '--card-bg-light': '#fef2f2' } as React.CSSProperties}
+              >
+                <div className="subject-card-icon">
+                  <svg viewBox="0 0 24 24" width="18" height="18" stroke="#ef4444" strokeWidth="2.5" fill="none">
+                    <path d="M 12 5 C 9 2 4 3 4 8 C 4 12 8 14 12 19 C 16 14 20 12 20 8 C 20 3 15 2 12 5 Z"/>
+                  </svg>
+                </div>
+                <div className="subject-card-info">
+                  <span className="subject-card-title">Psychology</span>
+                  <div key={activeConcept} className="subject-card-desc">
+                    <strong className="subject-card-hook">{conceptData[activeConcept].subjects.psychology.hook}</strong>
+                    <p className="subject-card-text">{conceptData[activeConcept].subjects.psychology.desc}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Mathematics */}
+              <div 
+                className="subject-card card-mathematics"
+                style={{ '--card-glow-color': '#8a4fff', '--card-bg-light': '#f3efff' } as React.CSSProperties}
+              >
+                <div className="subject-card-icon">
+                  <svg viewBox="0 0 24 24" width="18" height="18" stroke="#8a4fff" strokeWidth="2.5" fill="none">
+                    <circle cx="6" cy="6" r="2"/>
+                    <circle cx="18" cy="18" r="2"/>
+                    <circle cx="6" cy="18" r="2"/>
+                    <circle cx="18" cy="6" r="2"/>
+                    <line x1="8" y1="8" x2="16" y2="16"/>
+                    <line x1="8" y1="16" x2="16" y2="8"/>
+                  </svg>
+                </div>
+                <div className="subject-card-info">
+                  <span className="subject-card-title">Mathematics</span>
+                  <div key={activeConcept} className="subject-card-desc">
+                    <strong className="subject-card-hook">{conceptData[activeConcept].subjects.mathematics.hook}</strong>
+                    <p className="subject-card-text">{conceptData[activeConcept].subjects.mathematics.desc}</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ===================== SECTION: CONTENT SAFETY AUDIT ===================== */}
-      <section className="section-problem" id="safety" style={{ backgroundColor: '#FAF7F2' }}>
-        <div className="grid-container">
-          <div className="sticky-column">
-            <div className="problem-meta">05 / AUDIT TRAIL</div>
-            <h2 className="section-heading">Content safety by architectural design.</h2>
-            <p className="problem-lead">
-              Every query undergoes a high-speed classification pass. If a query aims to cheat on an exam or bypass homework rules, the system logs it and shifts back to conceptual illustrations.
-            </p>
-          </div>
-          <div className="scrolling-column">
-            <div className="audit-panel">
-              <div className="audit-header">LIVE AUDIT LOG / LEVEL 1 &amp; 2 DECODERS</div>
-              <table className="audit-table">
-                <thead>
-                  <tr>
-                    <th>Timestamp</th>
-                    <th>Intercepted Prompt</th>
-                    <th>Classification</th>
-                    <th>System Response</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>14:13:21</td>
-                    <td>"Write my essay about the cold war"</td>
-                    <td>Academic Cheat Attempt</td>
-                    <td className="status-blocked">BLOCKED</td>
-                  </tr>
-                  <tr>
-                    <td>14:14:45</td>
-                    <td>"Explain cellular respiration slider"</td>
-                    <td>Educational / Biology</td>
-                    <td className="status-allowed">ALLOWED</td>
-                  </tr>
-                  <tr>
-                    <td>14:16:10</td>
-                    <td>"Give me answer key to exam paper"</td>
-                    <td>Malicious / Exam Cheat</td>
-                    <td className="status-blocked">BLOCKED</td>
-                  </tr>
-                </tbody>
-              </table>
+      {/* ===================== SECTION: HOW IT WORKS ===================== */}
+      <section className="section-how" id="safety">
+        <div className="how-inner">
+
+          <div className="how-label">05 / HOW IT WORKS</div>
+          <h2 className="how-heading">From question to understanding<br />in three steps.</h2>
+
+          <div className="how-steps">
+
+            <div className="how-step">
+              <div className="how-num">01</div>
+              <div className="how-step-divider"></div>
+              <h4 className="how-step-title">Ask anything.</h4>
+              <p className="how-step-desc">
+                Type any concept from your syllabus — a chapter, a formula, a historical event. No special syntax needed.
+              </p>
             </div>
+
+            <div className="how-step-connector">
+              <svg viewBox="0 0 60 12" width="60" height="12" fill="none">
+                <path d="M 0 6 L 52 6 M 46 2 L 52 6 L 46 10" stroke="rgba(250,247,242,0.25)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+
+            <div className="how-step">
+              <div className="how-num">02</div>
+              <div className="how-step-divider"></div>
+              <h4 className="how-step-title">Get a live model.</h4>
+              <p className="how-step-desc">
+                Prologue generates a custom draggable simulation — not a video, not a wall of text. A living visual you can touch.
+              </p>
+            </div>
+
+            <div className="how-step-connector">
+              <svg viewBox="0 0 60 12" width="60" height="12" fill="none">
+                <path d="M 0 6 L 52 6 M 46 2 L 52 6 L 46 10" stroke="rgba(250,247,242,0.25)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+
+            <div className="how-step">
+              <div className="how-num">03</div>
+              <div className="how-step-divider"></div>
+              <h4 className="how-step-title">Learn by doing.</h4>
+              <p className="how-step-desc">
+                Drag elements, change variables, break the system. The concept clicks when you feel it, not when you read it.
+              </p>
+            </div>
+
           </div>
+
+          <div className="how-footer-strip">
+            <span className="how-footer-text">No answers. No shortcuts. Just understanding.</span>
+            <a href="#cta" className="how-cta-link">Reserve your seat &rarr;</a>
+          </div>
+
         </div>
       </section>
 
@@ -595,7 +796,7 @@ export default function Home() {
             <div className="footer-col">
               <h5>Architecture</h5>
               <a href="#architecture">Caching Specs</a>
-              <a href="#safety">Content Safety</a>
+              <a href="#safety">How It Works</a>
               <a href="https://github.com/notnishant" target="_blank" rel="noopener noreferrer">GitHub</a>
             </div>
             <div className="footer-col">

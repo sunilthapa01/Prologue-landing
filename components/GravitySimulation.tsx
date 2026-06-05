@@ -6,6 +6,9 @@ export default function GravitySimulation() {
   const [massSun, setMassSun] = useState<number>(150);
   const [massPlanet, setMassPlanet] = useState<number>(20);
 
+  const massSunRef = useRef<number>(150);
+  const massPlanetRef = useRef<number>(20);
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const isPlanetDragging = useRef<boolean>(false);
   const requestRef = useRef<number | null>(null);
@@ -60,7 +63,7 @@ export default function GravitySimulation() {
     ctx.clearRect(0, 0, width, height);
 
     // Fine grid background
-    ctx.strokeStyle = '#EAE4D8';
+    ctx.strokeStyle = '#D8D3CC';
     ctx.lineWidth = 0.5;
     for (let i = 30; i < width; i += 30) {
       ctx.beginPath();
@@ -80,49 +83,49 @@ export default function GravitySimulation() {
     const r = Math.sqrt(dx * dx + dy * dy);
 
     // Draw Orbit Trail Circle representing current radius path
-    ctx.strokeStyle = 'rgba(201, 59, 43, 0.06)';
+    ctx.strokeStyle = 'rgba(192, 57, 43, 0.1)'; // Vermillion orbit trail (subtle on light)
     ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.arc(starX, starY, r, 0, Math.PI * 2);
     ctx.stroke();
 
     // Draw Star Core with radial gradient
-    const starRadius = Math.max(16, Math.min(48, 12 + massSun * 0.12));
+    const starRadius = Math.max(16, Math.min(48, 12 + massSunRef.current * 0.12));
     const grad = ctx.createRadialGradient(starX, starY, 2, starX, starY, starRadius);
-    grad.addColorStop(0, '#FFE566');
-    grad.addColorStop(0.3, '#C93B2B');
-    grad.addColorStop(1, 'rgba(201, 59, 43, 0.05)');
-
+    grad.addColorStop(0, '#FFD500'); // Gold center
+    grad.addColorStop(0.3, '#C0392B'); // Vermillion main
+    grad.addColorStop(1, 'rgba(192, 57, 43, 0)'); // transparent outer
+ 
     ctx.fillStyle = grad;
     ctx.beginPath();
     ctx.arc(starX, starY, starRadius, 0, Math.PI * 2);
     ctx.fill();
-
-    ctx.strokeStyle = '#C93B2B';
+ 
+    ctx.strokeStyle = '#C0392B'; // Vermillion outline
     ctx.lineWidth = 1.5;
     ctx.beginPath();
     ctx.arc(starX, starY, starRadius - 2, 0, Math.PI * 2);
     ctx.stroke();
-
+ 
     // Draw Planet Node
-    const planetRadius = Math.max(6, Math.min(16, 4 + massPlanet * 0.25));
-    ctx.fillStyle = '#1E1C1A';
+    const planetRadius = Math.max(6, Math.min(16, 4 + massPlanetRef.current * 0.25));
+    ctx.fillStyle = '#1C1917'; // Ink planet
     ctx.beginPath();
     ctx.arc(pX.current, pY.current, planetRadius, 0, Math.PI * 2);
     ctx.fill();
-    ctx.strokeStyle = '#FAF7F2';
+    ctx.strokeStyle = '#F7F2EA'; // Paper stroke
     ctx.lineWidth = 1.5;
     ctx.stroke();
-
+ 
     // Vector arrows (Force and Velocity direction vectors)
     if (r > 10) {
       // Gravitational force vector (pointing towards central star)
-      const forceMagnitude = (massSun * massPlanet) / (r * r);
+      const forceMagnitude = (massSunRef.current * massPlanetRef.current) / (r * r);
       const forceArrowLen = Math.min(80, Math.max(18, forceMagnitude * 2800));
       const fx = (dx / r) * forceArrowLen;
       const fy = (dy / r) * forceArrowLen;
-      drawVectorArrow(ctx, pX.current, pY.current, pX.current + fx, pY.current + fy, '#C93B2B', 2.5);
-
+      drawVectorArrow(ctx, pX.current, pY.current, pX.current + fx, pY.current + fy, '#C0392B', 2.5);
+ 
       // Velocity vector (pointing in current travel tangent direction)
       const velScale = 12;
       drawVectorArrow(ctx, pX.current, pY.current, pX.current + pVx.current * velScale, pY.current + pVy.current * velScale, '#3498DB', 2.0);
@@ -144,17 +147,17 @@ export default function GravitySimulation() {
             const r = Math.max(18, Math.sqrt(dx * dx + dy * dy));
 
             // Newtonian Force acceleration vector
-            const accMagnitude = (G * massSun) / (r * r);
+            const accMagnitude = (G * massSunRef.current) / (r * r);
             const ax = accMagnitude * (dx / r);
             const ay = accMagnitude * (dy / r);
 
-            // Update velocity
-            pVx.current += ax * dt * 60;
-            pVy.current += ay * dt * 60;
+            // Update velocity with speed scaling factor of 30 (instead of 60) for a calmer speed
+            pVx.current += ax * dt * 30;
+            pVy.current += ay * dt * 30;
 
             // Update position
-            pX.current += pVx.current * dt * 60;
-            pY.current += pVy.current * dt * 60;
+            pX.current += pVx.current * dt * 30;
+            pY.current += pVy.current * dt * 30;
 
             // Bounce back if flies completely off bounds
             if (
@@ -177,7 +180,7 @@ export default function GravitySimulation() {
           const currentDy = starY - pY.current;
           const currentR = Math.sqrt(currentDx * currentDx + currentDy * currentDy);
           const velMagnitude = Math.sqrt(pVx.current * pVx.current + pVy.current * pVy.current);
-          const absoluteForceVal = (G * massSun * massPlanet) / (currentR * currentR);
+          const absoluteForceVal = (G * massSunRef.current * massPlanetRef.current) / (currentR * currentR);
 
           setTelemetry({
             velocity: (velMagnitude * 10).toFixed(0) + ' px/s',
@@ -196,7 +199,7 @@ export default function GravitySimulation() {
     return () => {
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
     };
-  }, [massSun, massPlanet]);
+  }, []);
 
   const handlePlanetDrag = (clientX: number, clientY: number, canvas: HTMLCanvasElement) => {
     const rect = canvas.getBoundingClientRect();
@@ -275,6 +278,7 @@ export default function GravitySimulation() {
 
   const handleStarMassChange = (newMass: number) => {
     setMassSun(newMass);
+    massSunRef.current = newMass;
     if (!isPlanetDragging.current) {
       const dx = starX - pX.current;
       const dy = starY - pY.current;
@@ -288,7 +292,7 @@ export default function GravitySimulation() {
   };
 
   return (
-    <div className="sim-container" id="sim-gravity-container">
+    <div className="sim-container active" id="sim-gravity-container">
       <div className="sim-sidebar">
         <div className="sim-label">Concept Explainer</div>
         <h3 className="sim-title">Newton's Law of Gravitation</h3>
@@ -317,7 +321,11 @@ export default function GravitySimulation() {
               max="50"
               step="1"
               value={massPlanet}
-              onChange={(e) => setMassPlanet(parseFloat(e.target.value))}
+              onChange={(e) => {
+                const newMass = parseFloat(e.target.value);
+                setMassPlanet(newMass);
+                massPlanetRef.current = newMass;
+              }}
             />
           </div>
         </div>
@@ -332,7 +340,7 @@ export default function GravitySimulation() {
           </div>
           <div className="telemetry-row highlight">
             <span>Gravitational Force:</span>
-            <span className="telemetry-value font-serif" id="val-gravity-force" style={{ color: '#C93B2B' }}>{telemetry.force}</span>
+            <span className="telemetry-value font-serif" id="val-gravity-force" style={{ color: '#C0392B' }}>{telemetry.force}</span>
           </div>
         </div>
       </div>

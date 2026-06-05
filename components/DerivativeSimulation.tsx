@@ -17,7 +17,7 @@ export default function DerivativeSimulation() {
     const dCenterY = height / 2;
 
     // Fine layout grid
-    ctx.strokeStyle = '#EAE4D8';
+    ctx.strokeStyle = '#D8D3CC';
     ctx.lineWidth = 0.5;
     for (let i = 40; i < width; i += 40) {
       ctx.beginPath();
@@ -33,7 +33,7 @@ export default function DerivativeSimulation() {
     }
 
     // X and Y Axes
-    ctx.strokeStyle = '#8F8880';
+    ctx.strokeStyle = '#7A746E';
     ctx.lineWidth = 1.2;
     ctx.beginPath();
     // X Axis
@@ -45,7 +45,7 @@ export default function DerivativeSimulation() {
     ctx.stroke();
 
     // Sine Curve formula: y = 1.2 * sin(x)
-    ctx.strokeStyle = '#1E1C1A';
+    ctx.strokeStyle = '#1C1917'; // Ink curve
     ctx.lineWidth = 2.5;
     ctx.beginPath();
     let first = true;
@@ -82,7 +82,7 @@ export default function DerivativeSimulation() {
     const cx2 = dCenterX + lx2 * dScaleX;
     const cy2 = dCenterY - ly2 * dScaleY;
 
-    ctx.strokeStyle = '#C93B2B';
+    ctx.strokeStyle = '#C0392B'; // Vermillion tangent
     ctx.lineWidth = 3;
     ctx.beginPath();
     ctx.moveTo(cx1, cy1);
@@ -90,16 +90,16 @@ export default function DerivativeSimulation() {
     ctx.stroke();
 
     // Draw point node P
-    ctx.fillStyle = '#1E1C1A';
+    ctx.fillStyle = '#1C1917'; // Ink point
     ctx.beginPath();
     ctx.arc(px, py, 7, 0, Math.PI * 2);
     ctx.fill();
-    ctx.strokeStyle = '#FAF7F2';
+    ctx.strokeStyle = '#F7F2EA'; // Paper stroke
     ctx.lineWidth = 2;
     ctx.stroke();
 
     // Label coordinate P
-    ctx.fillStyle = '#1E1C1A';
+    ctx.fillStyle = '#1C1917';
     ctx.font = 'italic bold 14px "DM Serif Display", serif';
     ctx.fillText("P", px + 12, py - 12);
   };
@@ -202,7 +202,7 @@ export default function DerivativeSimulation() {
           </div>
           <div className="telemetry-row highlight">
             <span>Slope (Derivative dy/dx):</span>
-            <span className="telemetry-value font-serif" id="val-slope" style={{ color: '#C93B2B' }}>{currentSlope.toFixed(2)}</span>
+            <span className="telemetry-value font-serif" id="val-slope" style={{ color: '#C0392B' }}>{currentSlope.toFixed(2)}</span>
           </div>
         </div>
       </div>

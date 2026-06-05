@@ -22,6 +22,11 @@ const config: Config = {
         'line':             '#DDD5C6',
         'bg-page':          '#F7F2EA',
         'bg-soft':          '#EFE8DC',
+        'midnight':         '#0D0B09',
+        'ember':            '#D4472A',
+        'liquid-gold':      '#E8C547',
+        'warm-amber':       '#8B6914',
+        'ghost-paper':      'rgba(247, 242, 234, 0.07)',
       },
       fontFamily: {
         outfit: ['Outfit', 'system-ui', '-apple-system', 'sans-serif'],
