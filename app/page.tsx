@@ -158,8 +158,8 @@ export default function Home() {
             <a href="#pedagogy" id="link-why">Why Prologue</a>
           </div>
           <div className="nav-actions">
-            <a href="#" className="nav-login" id="link-login">Log In</a>
-            <a href="#cta" className="nav-btn" id="link-cta">Get Started</a>
+            <a href="/login" className="nav-login" id="link-login">Log In</a>
+            <a href="/signup" className="nav-btn" id="link-cta">Get Started</a>
           </div>
         </div>
       </nav>
@@ -182,7 +182,7 @@ export default function Home() {
               </span>
               <span className="btn-text">Begin the Inquiry</span>
             </a>
-            <a href="#cta" className="btn btn-secondary" id="hero-btn-reserve">Reserve Seat</a>
+            <a href="/signup" className="btn btn-secondary" id="hero-btn-reserve">Reserve Seat</a>
           </div>
         </div>
 
@@ -703,7 +703,7 @@ export default function Home() {
 
           <div className="how-footer-strip">
             <span className="how-footer-text">No answers. No shortcuts. Just understanding.</span>
-            <a href="#cta" className="how-cta-link">Reserve your seat &rarr;</a>
+            <a href="/signup" className="how-cta-link">Reserve your seat &rarr;</a>
           </div>
 
         </div>
