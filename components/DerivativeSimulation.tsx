@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 
 export default function DerivativeSimulation() {
   const [xVal, setXVal] = useState<number>(0);
+  const [isMounted, setIsMounted] = useState<boolean>(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const isDragging = useRef<boolean>(false);
 
@@ -110,6 +111,7 @@ export default function DerivativeSimulation() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
     drawDerivative(ctx, canvas.width, canvas.height, xVal);
+    setIsMounted(true);
   }, [xVal]);
 
   const getLocalX = (clientX: number, canvas: HTMLCanvasElement) => {
@@ -208,9 +210,13 @@ export default function DerivativeSimulation() {
       </div>
 
       <div className="sim-viewport">
+        {!isMounted && (
+          <div style={{ width: 500, height: 360, borderRadius: 8, background: 'linear-gradient(90deg,#ede9e3 25%,#e2ddd7 50%,#ede9e3 75%)', backgroundSize: '200% 100%', animation: 'shimmer 1.5s infinite' }} />
+        )}
         <canvas
           ref={canvasRef}
           id="derivative-canvas"
+          style={{ display: isMounted ? 'block' : 'none' }}
           width="500"
           height="360"
           onMouseDown={handleMouseDown}

@@ -9,6 +9,7 @@ export default function GravitySimulation() {
   const massSunRef = useRef<number>(150);
   const massPlanetRef = useRef<number>(20);
 
+  const [isMounted, setIsMounted] = useState<boolean>(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const isPlanetDragging = useRef<boolean>(false);
   const requestRef = useRef<number | null>(null);
@@ -195,6 +196,7 @@ export default function GravitySimulation() {
   };
 
   useEffect(() => {
+    setIsMounted(true);
     requestRef.current = requestAnimationFrame(updatePhysics);
     return () => {
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
@@ -346,9 +348,13 @@ export default function GravitySimulation() {
       </div>
 
       <div className="sim-viewport">
+        {!isMounted && (
+          <div style={{ width: 500, height: 360, borderRadius: 8, background: 'linear-gradient(90deg,#ede9e3 25%,#e2ddd7 50%,#ede9e3 75%)', backgroundSize: '200% 100%', animation: 'shimmer 1.5s infinite' }} />
+        )}
         <canvas
           ref={canvasRef}
           id="gravity-canvas"
+          style={{ display: isMounted ? 'block' : 'none' }}
           width="500"
           height="360"
           onMouseDown={handleMouseDown}

@@ -18,7 +18,10 @@ export default function Home() {
   const [waitlistName, setWaitlistName] = useState('');
   const [waitlistEmail, setWaitlistEmail] = useState('');
   const [waitlistRole, setWaitlistRole] = useState('');
-  const [waitlistSubmitted, setWaitlistSubmitted] = useState(false);
+  const [waitlistSubmitted, setWaitlistSubmitted] = useState(() =>
+    typeof window !== 'undefined' && !!localStorage.getItem('prologue_waitlist_submitted')
+  );
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [activeConcept, setActiveConcept] = useState<'gravity' | 'goldenRatio' | 'printingPress'>('gravity');
 
   const conceptData = {
@@ -135,9 +138,13 @@ export default function Home() {
     );
   }, { dependencies: [activeConcept], scope: containerRef });
 
-  const handleWaitlistSubmit = (e: React.FormEvent) => {
+  const handleWaitlistSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    await new Promise((r) => setTimeout(r, 800));
+    localStorage.setItem('prologue_waitlist_submitted', '1');
     setWaitlistSubmitted(true);
+    setIsSubmitting(false);
   };
 
   return (
@@ -765,7 +772,9 @@ export default function Home() {
                       <option value="administrator">School Administrator</option>
                     </select>
                   </div>
-                  <button type="submit" className="btn btn-primary btn-block" id="form-submit-btn">Reserve Waitlist Spot</button>
+                  <button type="submit" className="btn btn-primary btn-block" id="form-submit-btn" disabled={isSubmitting}>
+                    {isSubmitting ? 'Sending...' : 'Reserve Waitlist Spot'}
+                  </button>
                 </form>
               )}
             </div>
