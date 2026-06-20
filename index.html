@@ -228,7 +228,10 @@
         </div>
         
         <div class="sim-viewport">
-          <canvas id="derivative-canvas" width="500" height="360"></canvas>
+          <div class="demo-wrap">
+            <div class="demo-skeleton" id="demo-skeleton-derivative"></div>
+            <canvas id="derivative-canvas" width="500" height="360"></canvas>
+          </div>
         </div>
       </div>
 
@@ -267,7 +270,10 @@
         </div>
         
         <div class="sim-viewport">
-          <canvas id="gravity-canvas" width="500" height="360"></canvas>
+          <div class="demo-wrap">
+            <div class="demo-skeleton" id="demo-skeleton-gravity"></div>
+            <canvas id="gravity-canvas" width="500" height="360"></canvas>
+          </div>
           <div class="canvas-instruction">Drag the blue planet to alter its orbit manually</div>
         </div>
       </div>
@@ -535,18 +541,18 @@
           </p>
         </div>
         <div class="cta-form-container">
-          <form class="cta-form" id="waitlist-form" onsubmit="event.preventDefault(); alert('Thank you for reserving your spot with Prologue.');">
+          <form class="cta-form" id="waitlist-form">
             <div class="form-group">
               <label for="student-name">Your Name</label>
-              <input type="text" id="student-name" placeholder="E.g., Alan Turing" required>
+              <input type="text" id="student-name" name="name" placeholder="E.g., Alan Turing" required>
             </div>
             <div class="form-group">
               <label for="student-email">Email Address</label>
-              <input type="email" id="student-email" placeholder="E.g., alan@domain.edu" required>
+              <input type="email" id="student-email" name="email" placeholder="E.g., alan@domain.edu" required>
             </div>
             <div class="form-group">
               <label for="student-role">Learning Role</label>
-              <select id="student-role" required>
+              <select id="student-role" name="role" required>
                 <option value="" disabled selected>Select your profile</option>
                 <option value="student">Student</option>
                 <option value="educator">Educator / Teacher</option>
@@ -555,6 +561,12 @@
               </select>
             </div>
             <button type="submit" class="btn btn-primary btn-block" id="form-submit-btn">Reserve Waitlist Spot</button>
+            <div id="form-success" style="display:none;" class="form-feedback form-feedback--success">
+              You're on the list! We'll be in touch soon.
+            </div>
+            <div id="form-error" style="display:none;" class="form-feedback form-feedback--error">
+              Something went wrong — please try again.
+            </div>
           </form>
         </div>
       </div>
@@ -587,13 +599,12 @@
           <h5>Architecture</h5>
           <a href="#architecture">Caching Specs</a>
           <a href="#safety">Content Safety</a>
-          <a href="https://github.com/notnishant" target="_blank" rel="noopener">GitHub</a>
         </div>
         <div class="footer-col">
           <h5>Legal</h5>
-          <a href="#">Privacy Policy</a>
-          <a href="#">Terms of Service</a>
-          <a href="#">Institutional Terms</a>
+          <a href="/privacy.html" target="_blank" rel="noopener">Privacy Policy</a>
+          <a href="/terms.html" target="_blank" rel="noopener">Terms of Service</a>
+          <a href="/institutional-terms.html" target="_blank" rel="noopener">Institutional Terms</a>
         </div>
       </div>
     </div>
@@ -607,9 +618,9 @@
 
   <!-- ===================== SCRIPTS ===================== -->
   <!-- GSAP for scroll driven page folds and editorial animations -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
   <!-- Local JS -->
-  <script src="script.js?v=1.2"></script>
+  <script src="script.js?v=1.3" defer></script>
 </body>
 </html>

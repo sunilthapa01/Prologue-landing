@@ -128,7 +128,11 @@ function initPrologue() {
       tabDeriv.classList.remove('active');
       simGrav.classList.add('active');
       simDeriv.classList.remove('active');
-      
+
+      // Hide gravity skeleton on first reveal
+      const gravSkel = document.getElementById('demo-skeleton-gravity');
+      if (gravSkel) gravSkel.style.display = 'none';
+
       // Reset gravity timer & start loop
       lastTime = 0;
       if (!animFrameId) {
@@ -300,9 +304,23 @@ function initPrologue() {
     });
 
     dSlider.addEventListener('input', drawDerivative);
-    
-    // Initial draw
-    drawDerivative();
+
+    // Lazy init: draw only when sandbox section enters viewport
+    const sandboxSection = document.getElementById('sandbox');
+    const derivSkeleton = document.getElementById('demo-skeleton-derivative');
+    if (sandboxSection) {
+      const derivObserver = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          drawDerivative();
+          if (derivSkeleton) derivSkeleton.style.display = 'none';
+          derivObserver.disconnect();
+        }
+      }, { threshold: 0.2 });
+      derivObserver.observe(sandboxSection);
+    } else {
+      drawDerivative();
+      if (derivSkeleton) derivSkeleton.style.display = 'none';
+    }
   }
 
   // ==========================================
@@ -572,6 +590,45 @@ function initPrologue() {
     });
 
     planetMassInput.addEventListener('input', drawGravityScene);
+  }
+
+  // ==========================================
+  // WAITLIST FORM HANDLER
+  // ==========================================
+  const waitlistForm = document.getElementById('waitlist-form');
+  if (waitlistForm) {
+    // Don't show form if already submitted
+    if (localStorage.getItem('prologue_waitlist_submitted')) {
+      waitlistForm.style.display = 'none';
+      const successEl = document.getElementById('form-success');
+      if (successEl) successEl.style.display = 'block';
+    }
+
+    waitlistForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = waitlistForm.querySelector('button[type=submit]');
+      const successEl = document.getElementById('form-success');
+      const errorEl = document.getElementById('form-error');
+
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
+      if (errorEl) errorEl.style.display = 'none';
+
+      try {
+        const res = await fetch('/api/waitlist', {
+          method: 'POST',
+          body: new FormData(waitlistForm)
+        });
+        if (!res.ok) throw new Error('server');
+        localStorage.setItem('prologue_waitlist_submitted', '1');
+        waitlistForm.style.display = 'none';
+        if (successEl) successEl.style.display = 'block';
+      } catch {
+        btn.disabled = false;
+        btn.textContent = 'Reserve Waitlist Spot';
+        if (errorEl) errorEl.style.display = 'block';
+      }
+    });
   }
 
   // ==========================================
