@@ -22,6 +22,7 @@ export default function Home() {
     typeof window !== 'undefined' && !!localStorage.getItem('prologue_waitlist_submitted')
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(false);
   const [activeConcept, setActiveConcept] = useState<'gravity' | 'goldenRatio' | 'printingPress'>('gravity');
 
   const conceptData = {
@@ -141,10 +142,21 @@ export default function Home() {
   const handleWaitlistSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    await new Promise((r) => setTimeout(r, 800));
-    localStorage.setItem('prologue_waitlist_submitted', '1');
-    setWaitlistSubmitted(true);
-    setIsSubmitting(false);
+    setSubmitError(false);
+    try {
+      const res = await fetch('/api/waitlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: waitlistName, email: waitlistEmail, role: waitlistRole }),
+      });
+      if (!res.ok) throw new Error('server');
+      localStorage.setItem('prologue_waitlist_submitted', '1');
+      setWaitlistSubmitted(true);
+    } catch {
+      setSubmitError(true);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -226,7 +238,6 @@ export default function Home() {
                   For four hundred years, education lived on sheets of paper. We drew three-dimensional coordinate fields on flat planes. We wrote formulas representing acceleration, and expected minds to mentally simulate the motion. Today, we replace static representation with living, interactive models.
                 </p>
                 <div className="notebook-peel-indicator">
-                  <span>Scroll to peel open</span>
                   <div className="arrow-down"></div>
                 </div>
               </div>
@@ -775,6 +786,11 @@ export default function Home() {
                   <button type="submit" className="btn btn-primary btn-block" id="form-submit-btn" disabled={isSubmitting}>
                     {isSubmitting ? 'Sending...' : 'Reserve Waitlist Spot'}
                   </button>
+                  {submitError && (
+                    <div id="form-error" style={{ marginTop: 16, padding: '12px 16px', borderRadius: 4, fontSize: '0.9rem', fontWeight: 500, textAlign: 'center', background: 'rgba(201,59,43,0.12)', border: '1px solid rgba(201,59,43,0.3)', color: '#C93B2B' }}>
+                      Something went wrong — please try again.
+                    </div>
+                  )}
                 </form>
               )}
             </div>
@@ -805,15 +821,14 @@ export default function Home() {
             </div>
             <div className="footer-col">
               <h5>Architecture</h5>
-              <a href="#architecture">Caching Specs</a>
+              <a href="#concept-map">Interdisciplinary Web</a>
               <a href="#safety">How It Works</a>
-              <a href="https://github.com/notnishant" target="_blank" rel="noopener noreferrer">GitHub</a>
             </div>
             <div className="footer-col">
               <h5>Legal</h5>
-              <a href="#">Privacy Policy</a>
-              <a href="#">Terms of Service</a>
-              <a href="#">Institutional Terms</a>
+              <a href="/privacy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+              <a href="/terms.html" target="_blank" rel="noopener noreferrer">Terms of Service</a>
+              <a href="/institutional-terms.html" target="_blank" rel="noopener noreferrer">Institutional Terms</a>
             </div>
           </div>
         </div>
