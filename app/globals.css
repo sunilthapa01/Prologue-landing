@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=DM+Serif+Display:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@300;400;500;600&display=swap');
 
 @keyframes shimmer { to { background-position: -200% 0; } }
 @keyframes sk-reveal { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: translateY(0); } }
@@ -30,9 +30,10 @@
   --gold: #FFD500; /* VisualLearn Gold */
   --gold-soft: #FFE566;
   
-  /* Font Family Defaults */
-  --font-serif: var(--font-serif, 'DM Serif Display', Georgia, serif);
-  --font-sans: var(--font-sans, 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif);
+  /* Font Family Defaults — mirrors VisualLearn tokens.css */
+  --font-serif: 'DM Serif Display', Georgia, serif;
+  --font-sans: 'DM Sans', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
   
   /* Spacing Scale */
   --space-xs: 8px;
@@ -691,8 +692,9 @@ p {
 }
 
 .problem-meta {
-  font-size: 0.8rem;
-  font-weight: 700;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
   letter-spacing: 0.15em;
   color: var(--vermillion);
   margin-bottom: 16px;
@@ -740,8 +742,9 @@ p {
 }
 
 .card-eyebrow {
-  font-size: 0.75rem;
-  font-weight: 700;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
   letter-spacing: 0.1em;
   color: var(--muted-taupe);
   text-transform: uppercase;
@@ -872,8 +875,9 @@ p {
 }
 
 .sandbox-meta {
-  font-size: 0.8rem;
-  font-weight: 700;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
   letter-spacing: 0.15em;
   color: var(--vermillion);
   margin-bottom: 16px;
@@ -953,8 +957,9 @@ p {
 }
 
 .sim-label {
-  font-size: 0.75rem;
-  font-weight: 700;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
   letter-spacing: 0.1em;
   color: var(--vermillion);
   text-transform: uppercase;
@@ -1057,6 +1062,8 @@ p {
 }
 
 .telemetry-value {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
   font-weight: 600;
   color: var(--ink);
 }
@@ -1125,8 +1132,9 @@ p {
 }
 
 .pedagogy-meta {
-  font-size: 0.8rem;
-  font-weight: 700;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
   letter-spacing: 0.15em;
   color: var(--vermillion);
   margin-bottom: 16px;
@@ -1269,6 +1277,16 @@ p {
   margin: 0 auto;
 }
 
+.arch-meta {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: var(--vermillion);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
 .concept-selectors {
   display: flex;
   justify-content: center;
@@ -1282,7 +1300,7 @@ p {
   border: 1px solid var(--line-color);
   background-color: var(--paper);
   color: var(--ink);
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.85rem;
   font-weight: 500;
   cursor: pointer;
@@ -1381,7 +1399,7 @@ p {
 }
 
 .central-orb .orb-title {
-  font-family: Georgia, serif;
+  font-family: var(--font-serif);
   font-size: 1.8rem;
   font-weight: bold;
   color: var(--ink);
@@ -1561,8 +1579,9 @@ p {
 }
 
 .how-label {
-  font-size: 0.75rem;
-  font-weight: 700;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--vermillion);
@@ -1570,7 +1589,7 @@ p {
 }
 
 .how-heading {
-  font-family: 'DM Serif Display', serif !important;
+  font-family: var(--font-serif) !important;
   font-size: clamp(2rem, 4vw, 3rem);
   color: var(--paper);
   line-height: 1.15;
@@ -1595,7 +1614,7 @@ p {
 }
 
 .how-num {
-  font-family: 'DM Serif Display', serif;
+  font-family: var(--font-serif);
   font-size: 3.5rem;
   color: var(--vermillion);
   line-height: 1;
@@ -1612,7 +1631,7 @@ p {
 }
 
 .how-step-title {
-  font-family: 'DM Serif Display', serif !important;
+  font-family: var(--font-serif) !important;
   font-size: 1.35rem;
   color: var(--paper);
   margin-bottom: 12px;
@@ -1640,7 +1659,7 @@ p {
   font-size: 0.9rem;
   color: rgba(250, 247, 242, 0.4);
   font-style: italic;
-  font-family: 'DM Serif Display', serif;
+  font-family: var(--font-serif);
 }
 
 .how-cta-link {
@@ -1719,7 +1738,11 @@ p {
 }
 
 .cta-meta {
-  font-size: 1.1rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   color: var(--vermillion);
   margin-bottom: 16px;
 }
