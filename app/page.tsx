@@ -35,6 +35,7 @@ export default function Home() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(false);
   const [activeConcept, setActiveConcept] = useState<'gravity' | 'goldenRatio' | 'printingPress'>('gravity');
+  const [navOpen, setNavOpen] = useState(false);
   const [revealedSections, setRevealedSections] = useState<Set<string>>(new Set());
 
   useEffect(() => {
@@ -218,6 +219,24 @@ export default function Home() {
           <div className="nav-actions">
             <a href="https://app.prologuelearn.com/login" className="nav-login" id="link-login">Log In</a>
             <a href="https://app.prologuelearn.com/signup" className="nav-btn" id="link-cta">Get Started</a>
+          </div>
+          <button
+            className={`nav-hamburger${navOpen ? ' open' : ''}`}
+            onClick={() => setNavOpen(v => !v)}
+            aria-label={navOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={navOpen}
+          >
+            <span /><span /><span />
+          </button>
+        </div>
+        <div className={`nav-mobile-menu${navOpen ? ' open' : ''}`} aria-hidden={!navOpen}>
+          <a href="#problem" onClick={() => setNavOpen(false)}>The Cognitive Gap</a>
+          <a href="#sandbox" onClick={() => setNavOpen(false)}>Explore</a>
+          <a href="#pedagogy" onClick={() => setNavOpen(false)}>Why Prologue</a>
+          <a href="#safety" onClick={() => setNavOpen(false)}>How It Works</a>
+          <div className="nav-mobile-actions">
+            <a href="https://app.prologuelearn.com/login" className="nav-login" onClick={() => setNavOpen(false)}>Log In</a>
+            <a href="https://app.prologuelearn.com/signup" className="nav-btn" onClick={() => setNavOpen(false)}>Get Started</a>
           </div>
         </div>
       </nav>

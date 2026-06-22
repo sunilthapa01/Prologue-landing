@@ -1938,3 +1938,228 @@ p {
     gap: 30px;
   }
 }
+
+/* ════════════════════════════════════════════════════════
+   MOBILE RESPONSIVE SYSTEM
+   All rules below are mobile-only — no desktop styles touched.
+   Breakpoints: 768px (tablet/large phone), 480px, 375px, 320px
+   ════════════════════════════════════════════════════════ */
+
+/* ── Hamburger button (hidden on desktop) ──────────────── */
+.nav-hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+.nav-hamburger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background-color: var(--ink);
+  border-radius: 2px;
+  transition: transform 0.25s ease, opacity 0.2s ease;
+  transform-origin: center;
+}
+.nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ── Mobile nav dropdown (hidden on desktop) ───────────── */
+.nav-mobile-menu {
+  display: none;
+  position: fixed;
+  top: 61px;
+  left: 0;
+  right: 0;
+  background-color: var(--paper);
+  border-bottom: 1px solid var(--line-color);
+  padding: 8px 24px 24px;
+  flex-direction: column;
+  z-index: 998;
+  box-shadow: 0 8px 28px rgba(30, 28, 26, 0.09);
+  transform: translateY(-108%);
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.nav-mobile-menu.open { transform: translateY(0); }
+
+.nav-mobile-menu a {
+  display: block;
+  padding: 14px 0;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--line-color);
+  transition: color var(--transition-fast);
+}
+.nav-mobile-menu a:last-of-type { border-bottom: none; }
+.nav-mobile-menu a:hover { color: var(--vermillion); }
+
+.nav-mobile-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  align-items: center;
+}
+.nav-mobile-actions .nav-login {
+  border: none !important;
+  padding: 0;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.nav-mobile-actions .nav-btn {
+  padding: 10px 20px;
+  font-size: 0.9rem;
+}
+
+/* ════════════════════════════════════════════════════════
+   ≤ 768px  —  tablets & large phones
+   ════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* ── Nav ── */
+  .nav-hamburger { display: flex; }
+  .nav-actions { display: none; }
+  .nav-mobile-menu { display: flex; }
+
+  /* ── Hero ── */
+  .hero-container { padding: 0 24px; text-align: center; }
+  .hero-title { font-size: clamp(2rem, 7.5vw, 3rem); }
+  .hero-subtitle { font-size: 1.05rem; margin-bottom: 28px; }
+  .hero-meta { font-size: 0.68rem; letter-spacing: 0.18em; }
+  .hero-cta-group {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    max-width: none;
+    width: 100%;
+  }
+  .hero-cta-group .btn {
+    width: 100%;
+    max-width: 340px;
+    justify-content: center;
+  }
+
+  /* ── Sim canvas — scale down to fit screen ── */
+  .sim-viewport canvas {
+    max-width: 100%;
+    height: auto;
+  }
+  .sim-viewport { padding: 12px; overflow: hidden; }
+
+  /* ── Sim sidebar controls ── */
+  .control-group input[type="range"] { width: 100%; }
+  .sim-telemetry { font-size: 0.88rem; }
+
+  /* ── Concept selectors — wrap on small screens ── */
+  .concept-selectors { flex-wrap: wrap; gap: 8px; }
+
+  /* ── Waitlist form inputs full width ── */
+  .cta-form input,
+  .cta-form select { width: 100%; box-sizing: border-box; }
+  .btn-block { width: 100%; }
+
+  /* ── Grid container (section-problem) single-col ── */
+  .grid-container { display: flex; flex-direction: column; gap: 40px; }
+
+  /* ── CTA grid single-col ── */
+  .cta-grid { grid-template-columns: 1fr; gap: 32px; }
+}
+
+/* ════════════════════════════════════════════════════════
+   ≤ 480px  —  standard phones
+   ════════════════════════════════════════════════════════ */
+@media (max-width: 480px) {
+  /* ── Section padding ── */
+  .section-problem,
+  .section-sandbox,
+  .section-pedagogy,
+  .section-cta { padding-left: 16px !important; padding-right: 16px !important; }
+  .section-concept-map { padding: var(--space-lg) 16px !important; }
+  .section-how { padding-left: 16px !important; padding-right: 16px !important; }
+
+  /* ── Hero ── */
+  .section-hero { padding-top: 88px; }
+  .hero-title { font-size: clamp(1.8rem, 8vw, 2.4rem); letter-spacing: -0.01em; }
+  .hero-subtitle { font-size: 0.97rem; line-height: 1.55; }
+
+  /* ── Sim sidebar ── */
+  .sim-sidebar { padding: 20px 16px !important; }
+  .sim-title { font-size: 1.35rem; }
+  .sim-explanation { font-size: 0.9rem; }
+  .control-group label { font-size: 0.82rem; }
+  .telemetry-row { font-size: 0.82rem; }
+
+  /* ── Comparison table — horizontal scroll ── */
+  .comparison-matrix-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-left: -16px;
+    margin-right: -16px;
+    padding: 0 16px;
+  }
+  .comparison-table { min-width: 520px; font-size: 0.82rem; }
+  .comparison-table th,
+  .comparison-table td { padding: 10px 12px; }
+
+  /* ── Concept map cards single-col ── */
+  .concept-cards-grid { grid-template-columns: 1fr !important; max-width: 100% !important; }
+  .subject-card { max-width: 100% !important; }
+  .arch-header { text-align: center; }
+
+  /* ── CTA inner ── */
+  .cta-inner { padding: 32px 16px !important; border-radius: 8px; }
+  .cta-form { padding: 24px 16px !important; }
+  .cta-heading { font-size: clamp(1.6rem, 7vw, 2.2rem) !important; }
+
+  /* ── How-it-works ── */
+  .how-heading { font-size: clamp(1.5rem, 6.5vw, 2rem) !important; }
+  .how-step-title { font-size: 1rem; }
+  .how-footer-strip { flex-direction: column; align-items: flex-start; gap: 12px; }
+
+  /* ── Footer ── */
+  .footer-links-grid { grid-template-columns: 1fr !important; }
+  .footer-brand { text-align: center; }
+  .footer-motto { font-size: 0.9rem; }
+
+  /* ── Pedagogy framework grid single col ── */
+  .framework-grid { grid-template-columns: 1fr !important; }
+  .framework-feature { padding: 24px 0; border-bottom: 1px solid var(--line-color); }
+  .framework-feature:last-child { border-bottom: none; }
+}
+
+/* ════════════════════════════════════════════════════════
+   ≤ 390px  —  iPhone 14/15 Pro, common baseline
+   ════════════════════════════════════════════════════════ */
+@media (max-width: 390px) {
+  .nav-container { padding: 12px 16px; }
+  .nav-logo-link svg { width: 110px; height: 36px; }
+  .hero-container { padding: 0 16px; }
+  .hero-title { font-size: 1.8rem; }
+  .sandbox-tabs { gap: 8px; }
+  .tab-btn { padding: 9px 14px; font-size: 0.82rem; }
+  .selector-btn { padding: 7px 14px; font-size: 0.8rem; }
+  .cta-heading { font-size: 1.6rem !important; }
+}
+
+/* ════════════════════════════════════════════════════════
+   ≤ 320px  —  smallest phones (SE 1st gen etc.)
+   ════════════════════════════════════════════════════════ */
+@media (max-width: 320px) {
+  .hero-title { font-size: 1.6rem; letter-spacing: -0.01em; }
+  .hero-subtitle { font-size: 0.92rem; }
+  .nav-logo-link svg { width: 96px; height: 31px; }
+  .sim-sidebar { padding: 16px 12px !important; }
+  .cta-inner { padding: 24px 12px !important; }
+  .cta-form { padding: 20px 12px !important; }
+  .comparison-table { font-size: 0.76rem; }
+}
