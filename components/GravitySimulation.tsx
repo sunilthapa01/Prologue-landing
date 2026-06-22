@@ -196,9 +196,11 @@ export default function GravitySimulation() {
   };
 
   useEffect(() => {
-    setIsMounted(true);
+    // 2s delay so skeleton is clearly visible — remove after demo
+    const t = setTimeout(() => setIsMounted(true), 2000);
     requestRef.current = requestAnimationFrame(updatePhysics);
     return () => {
+      clearTimeout(t);
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
     };
   }, []);

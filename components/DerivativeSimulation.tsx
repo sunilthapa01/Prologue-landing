@@ -111,7 +111,9 @@ export default function DerivativeSimulation() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
     drawDerivative(ctx, canvas.width, canvas.height, xVal);
-    setIsMounted(true);
+    // 2s delay so skeleton is clearly visible — remove after demo
+    const t = setTimeout(() => setIsMounted(true), 2000);
+    return () => clearTimeout(t);
   }, [xVal]);
 
   const getLocalX = (clientX: number, canvas: HTMLCanvasElement) => {
