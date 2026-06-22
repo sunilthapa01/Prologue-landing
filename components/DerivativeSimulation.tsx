@@ -111,9 +111,7 @@ export default function DerivativeSimulation() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
     drawDerivative(ctx, canvas.width, canvas.height, xVal);
-    // 2s delay so skeleton is clearly visible — remove after demo
-    const t = setTimeout(() => setIsMounted(true), 2000);
-    return () => clearTimeout(t);
+    setIsMounted(true);
   }, [xVal]);
 
   const getLocalX = (clientX: number, canvas: HTMLCanvasElement) => {
@@ -212,9 +210,11 @@ export default function DerivativeSimulation() {
       </div>
 
       <div className="sim-viewport">
-        {!isMounted && (
-          <div style={{ width: 500, height: 360, borderRadius: 8, background: 'linear-gradient(90deg,#ede9e3 25%,#e2ddd7 50%,#ede9e3 75%)', backgroundSize: '200% 100%', animation: 'shimmer 1.5s infinite' }} />
-        )}
+        <div
+          role="status"
+          aria-label="Loading simulation"
+          style={{ width: 500, height: 360, borderRadius: 8, background: 'linear-gradient(90deg,#ede9e3 25%,#e2ddd7 50%,#ede9e3 75%)', backgroundSize: '200% 100%', animation: 'shimmer 1.5s infinite', display: isMounted ? 'none' : 'block' }}
+        />
         <canvas
           ref={canvasRef}
           id="derivative-canvas"

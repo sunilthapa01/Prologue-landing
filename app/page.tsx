@@ -739,60 +739,55 @@ export default function Home() {
               </p>
             </div>
             <div className="cta-form-container">
-              {waitlistSubmitted ? (
-                <div className="waitlist-success-message">
-                  <h4>Thank You.</h4>
-                  <p>Your spot has been reserved. We will reach out to <strong>{waitlistEmail}</strong> shortly.</p>
+              <div id="waitlist-success" role="alert" aria-live="polite" className="waitlist-success-message" style={{ display: waitlistSubmitted ? 'block' : 'none' }}>
+                <h4>Thank You.</h4>
+                <p>Your spot has been reserved. We will reach out to <strong>{waitlistEmail}</strong> shortly.</p>
+              </div>
+              <form className="cta-form" id="waitlist-form" onSubmit={handleWaitlistSubmit} style={{ display: waitlistSubmitted ? 'none' : 'block' }}>
+                <div className="form-group">
+                  <label htmlFor="student-name">Your Name</label>
+                  <input
+                    type="text"
+                    id="student-name"
+                    placeholder="E.g., Alan Turing"
+                    value={waitlistName}
+                    onChange={(e) => setWaitlistName(e.target.value)}
+                    required
+                  />
                 </div>
-              ) : (
-                <form className="cta-form" id="waitlist-form" onSubmit={handleWaitlistSubmit}>
-                  <div className="form-group">
-                    <label htmlFor="student-name">Your Name</label>
-                    <input 
-                      type="text" 
-                      id="student-name" 
-                      placeholder="E.g., Alan Turing" 
-                      value={waitlistName}
-                      onChange={(e) => setWaitlistName(e.target.value)}
-                      required 
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="student-email">Email Address</label>
-                    <input 
-                      type="email" 
-                      id="student-email" 
-                      placeholder="E.g., alan@domain.edu" 
-                      value={waitlistEmail}
-                      onChange={(e) => setWaitlistEmail(e.target.value)}
-                      required 
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="student-role">Learning Role</label>
-                    <select 
-                      id="student-role" 
-                      value={waitlistRole}
-                      onChange={(e) => setWaitlistRole(e.target.value)}
-                      required
-                    >
-                      <option value="" disabled>Select your profile</option>
-                      <option value="student">Student</option>
-                      <option value="educator">Educator / Teacher</option>
-                      <option value="parent">Parent</option>
-                      <option value="administrator">School Administrator</option>
-                    </select>
-                  </div>
-                  <button type="submit" className="btn btn-primary btn-block" id="form-submit-btn" disabled={isSubmitting}>
-                    {isSubmitting ? 'Sending...' : 'Reserve Waitlist Spot'}
-                  </button>
-                  {submitError && (
-                    <div id="form-error" style={{ marginTop: 16, padding: '12px 16px', borderRadius: 4, fontSize: '0.9rem', fontWeight: 500, textAlign: 'center', background: 'rgba(201,59,43,0.12)', border: '1px solid rgba(201,59,43,0.3)', color: '#C93B2B' }}>
-                      Something went wrong — please try again.
-                    </div>
-                  )}
-                </form>
-              )}
+                <div className="form-group">
+                  <label htmlFor="student-email">Email Address</label>
+                  <input
+                    type="email"
+                    id="student-email"
+                    placeholder="E.g., alan@domain.edu"
+                    value={waitlistEmail}
+                    onChange={(e) => setWaitlistEmail(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="student-role">Learning Role</label>
+                  <select
+                    id="student-role"
+                    value={waitlistRole}
+                    onChange={(e) => setWaitlistRole(e.target.value)}
+                    required
+                  >
+                    <option value="" disabled>Select your profile</option>
+                    <option value="student">Student</option>
+                    <option value="educator">Educator / Teacher</option>
+                    <option value="parent">Parent</option>
+                    <option value="administrator">School Administrator</option>
+                  </select>
+                </div>
+                <button type="submit" className="btn btn-primary btn-block" id="form-submit-btn" disabled={isSubmitting}>
+                  {isSubmitting ? 'Sending...' : 'Reserve Waitlist Spot'}
+                </button>
+                <div id="form-error" role="alert" aria-live="polite" style={{ marginTop: 16, padding: '12px 16px', borderRadius: 4, fontSize: '0.9rem', fontWeight: 500, textAlign: 'center', background: 'rgba(201,59,43,0.12)', border: '1px solid rgba(201,59,43,0.3)', color: '#C93B2B', display: submitError ? 'block' : 'none' }}>
+                  Something went wrong — please try again.
+                </div>
+              </form>
             </div>
           </div>
         </div>

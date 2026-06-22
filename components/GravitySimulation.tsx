@@ -196,11 +196,9 @@ export default function GravitySimulation() {
   };
 
   useEffect(() => {
-    // 2s delay so skeleton is clearly visible — remove after demo
-    const t = setTimeout(() => setIsMounted(true), 2000);
+    setIsMounted(true);
     requestRef.current = requestAnimationFrame(updatePhysics);
     return () => {
-      clearTimeout(t);
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
     };
   }, []);
@@ -350,9 +348,11 @@ export default function GravitySimulation() {
       </div>
 
       <div className="sim-viewport">
-        {!isMounted && (
-          <div style={{ width: 500, height: 360, borderRadius: 8, background: 'linear-gradient(90deg,#ede9e3 25%,#e2ddd7 50%,#ede9e3 75%)', backgroundSize: '200% 100%', animation: 'shimmer 1.5s infinite' }} />
-        )}
+        <div
+          role="status"
+          aria-label="Loading simulation"
+          style={{ width: 500, height: 360, borderRadius: 8, background: 'linear-gradient(90deg,#ede9e3 25%,#e2ddd7 50%,#ede9e3 75%)', backgroundSize: '200% 100%', animation: 'shimmer 1.5s infinite', display: isMounted ? 'none' : 'block' }}
+        />
         <canvas
           ref={canvasRef}
           id="gravity-canvas"
