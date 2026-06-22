@@ -1,6 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=DM+Serif+Display:ital@0;1&display=swap');
 
 @keyframes shimmer { to { background-position: -200% 0; } }
+@keyframes sk-reveal { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: translateY(0); } }
+.sk-revealed { animation: sk-reveal 0.42s ease forwards; }
+.sk-row { display: flex; gap: 12px; }
+.sk-col { display: flex; flex-direction: column; }
 
 @tailwind base;
 @tailwind components;

@@ -1,6 +1,17 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+
+const SK_LIGHT = 'linear-gradient(90deg,#ede9e3 25%,#e2ddd7 50%,#ede9e3 75%)';
+const SK_DARK  = 'linear-gradient(90deg,rgba(255,255,255,0.07) 25%,rgba(255,255,255,0.13) 50%,rgba(255,255,255,0.07) 75%)';
+const SK_STYLE = { backgroundSize: '200% 100%', animation: 'shimmer 1.5s infinite' } as const;
+
+function Sk({ w = '100%', h = 16, r = 6, mt = 0 }: { w?: string | number; h?: number; r?: number; mt?: number }) {
+  return <div aria-hidden="true" style={{ width: w, height: h, borderRadius: r, marginTop: mt, background: SK_LIGHT, ...SK_STYLE }} />;
+}
+function SkDark({ w = '100%', h = 16, r = 6, mt = 0 }: { w?: string | number; h?: number; r?: number; mt?: number }) {
+  return <div aria-hidden="true" style={{ width: w, height: h, borderRadius: r, marginTop: mt, background: SK_DARK, ...SK_STYLE }} />;
+}
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
@@ -24,6 +35,34 @@ export default function Home() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(false);
   const [activeConcept, setActiveConcept] = useState<'gravity' | 'goldenRatio' | 'printingPress'>('gravity');
+  const [revealedSections, setRevealedSections] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    const SECTIONS = ['hero', 'problem', 'pedagogy', 'concept-map', 'safety', 'cta'];
+    const timers: ReturnType<typeof setTimeout>[] = [];
+    const observers: IntersectionObserver[] = [];
+
+    SECTIONS.forEach((id) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const obs = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          const t = setTimeout(() => {
+            setRevealedSections(prev => { const next = new Set(prev); next.add(id); return next; });
+          }, 500);
+          timers.push(t);
+          obs.unobserve(el);
+        }
+      }, { threshold: 0.12 });
+      obs.observe(el);
+      observers.push(obs);
+    });
+
+    return () => {
+      timers.forEach(clearTimeout);
+      observers.forEach(obs => obs.disconnect());
+    };
+  }, []);
 
   const conceptData = {
     gravity: {
@@ -186,23 +225,41 @@ export default function Home() {
       {/* ===================== HERO SECTION ===================== */}
       <header className="section-hero" id="hero">
         <div className="hero-container">
-          <div className="hero-meta">PROLOGUE ESSAYS / SPRING 2026</div>
-          <h1 className="hero-title">We don't solve problems.<br />We show you what they look like.</h1>
-          <p className="hero-subtitle">
-            For the student who stares at a block of static text, hoping it will suddenly make sense. Prologue builds responsive, interactive environments you can touch, stretch, and break. Understand anything by exploring it.
-          </p>
-          <div className="hero-cta-group">
-            <a href="#sandbox" className="btn btn-primary btn-inquiry" id="hero-btn-explore">
-              <span className="btn-glare-shimmer">
-                <svg className="btn-graph-canvas" viewBox="0 0 190 52">
-                  <path className="graph-curve" d="M 10 38 Q 50 10, 100 28 T 190 12" fill="none" stroke="rgba(250, 247, 242, 0.25)" strokeWidth="2" />
-                  <circle className="graph-point" r="4" fill="#FAF7F2" />
-                </svg>
-              </span>
-              <span className="btn-text">Begin the Inquiry</span>
-            </a>
-            <a href="https://app.prologuelearn.com/signup" className="btn btn-secondary" id="hero-btn-reserve">Reserve Seat</a>
-          </div>
+          {!revealedSections.has('hero') ? (
+            <>
+              <Sk w="46%" h={12} r={3} />
+              <Sk w="78%" h={56} r={8} mt={22} />
+              <Sk w="63%" h={56} r={8} mt={12} />
+              <Sk w="100%" h={17} r={4} mt={32} />
+              <Sk w="94%" h={17} r={4} mt={9} />
+              <Sk w="78%" h={17} r={4} mt={9} />
+              <Sk w="65%" h={17} r={4} mt={9} />
+              <div style={{ display: 'flex', gap: 16, marginTop: 42 }}>
+                <Sk w={200} h={52} r={8} />
+                <Sk w={150} h={52} r={8} />
+              </div>
+            </>
+          ) : (
+            <div className="sk-revealed">
+              <div className="hero-meta">PROLOGUE ESSAYS / SPRING 2026</div>
+              <h1 className="hero-title">We don't solve problems.<br />We show you what they look like.</h1>
+              <p className="hero-subtitle">
+                For the student who stares at a block of static text, hoping it will suddenly make sense. Prologue builds responsive, interactive environments you can touch, stretch, and break. Understand anything by exploring it.
+              </p>
+              <div className="hero-cta-group">
+                <a href="#sandbox" className="btn btn-primary btn-inquiry" id="hero-btn-explore">
+                  <span className="btn-glare-shimmer">
+                    <svg className="btn-graph-canvas" viewBox="0 0 190 52">
+                      <path className="graph-curve" d="M 10 38 Q 50 10, 100 28 T 190 12" fill="none" stroke="rgba(250, 247, 242, 0.25)" strokeWidth="2" />
+                      <circle className="graph-point" r="4" fill="#FAF7F2" />
+                    </svg>
+                  </span>
+                  <span className="btn-text">Begin the Inquiry</span>
+                </a>
+                <a href="https://app.prologuelearn.com/signup" className="btn btn-secondary" id="hero-btn-reserve">Reserve Seat</a>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* The interactive book page turn visual system */}
@@ -248,56 +305,76 @@ export default function Home() {
 
       {/* ===================== SECTION: THE COGNITIVE GAP ===================== */}
       <section className="section-problem" id="problem">
-        <div className="grid-container">
-          <div className="sticky-column">
-            <div className="problem-meta">01 / THE COGNITIVE GAP</div>
-            <h2 className="section-heading">Why textbooks fail active minds.</h2>
-            <p className="problem-lead">
-              A static diagram requires mental simulation. You have to imagine how a variable behaves. This creates a massive cognitive burden. Interactive visuals shift that burden from the student to the platform.
-            </p>
-          </div>
-          <div className="scrolling-column">
-            {/* Row 1: Traditional textbook */}
-            <div className="comparison-card">
-              <div className="card-eyebrow">Traditional Textbook</div>
-              <h4 className="card-title">Three paragraphs of dry notation</h4>
-              <p className="card-desc">
-                "Let a derivative be defined as the limit of the difference quotient as h approaches zero..." A formula is memorized for the exam, but the actual geometric meaning is entirely lost.
-              </p>
-              <div className="mock-ui text-mock">
-                <div className="mock-line"></div>
-                <div className="mock-line"></div>
-                <div className="mock-line half"></div>
-              </div>
+        {!revealedSections.has('problem') ? (
+          <div className="grid-container">
+            <div className="sticky-column">
+              <Sk w="30%" h={11} r={3} />
+              <Sk w="85%" h={34} r={6} mt={18} />
+              <Sk w="72%" h={34} r={6} mt={10} />
+              <Sk w="100%" h={15} r={4} mt={22} />
+              <Sk w="100%" h={15} r={4} mt={8} />
+              <Sk w="80%" h={15} r={4} mt={8} />
             </div>
-            
-            {/* Row 2: Video Lecture */}
-            <div className="comparison-card">
-              <div className="card-eyebrow">Passive Video</div>
-              <h4 className="card-title">A six-minute passive timeline</h4>
-              <p className="card-desc">
-                You watch a teacher draw lines on a digital whiteboard. You nod along, but your brain remains in receiver mode. Ten minutes later, you cannot reproduce the logic.
-              </p>
-              <div className="mock-ui video-mock">
-                <div className="video-play-btn"></div>
-                <div className="video-timeline"><div className="video-progress"></div></div>
-              </div>
-            </div>
-
-            {/* Row 3: Answer Machines (SaaS AI) */}
-            <div className="comparison-card">
-              <div className="card-eyebrow">Answer Machines</div>
-              <h4 className="card-title">Instant solution, zero comprehension</h4>
-              <p className="card-desc">
-                SaaS chatbots spit out step-by-step solutions instantly. You copy-paste it to finish your homework. You get the grade, but your understanding is non-existent.
-              </p>
-              <div className="mock-ui ai-mock">
-                <div className="chat-bubble user">Solve x^2 - 4 = 0</div>
-                <div className="chat-bubble ai">The answers are x = 2 and x = -2. Here are the steps...</div>
-              </div>
+            <div className="scrolling-column">
+              {[0, 1, 2].map(i => (
+                <div key={i} className="comparison-card">
+                  <Sk w="30%" h={10} r={3} />
+                  <Sk w="70%" h={20} r={4} mt={12} />
+                  <Sk w="100%" h={13} r={3} mt={16} />
+                  <Sk w="100%" h={13} r={3} mt={6} />
+                  <Sk w="60%" h={13} r={3} mt={6} />
+                  <Sk w="100%" h={76} r={6} mt={18} />
+                </div>
+              ))}
             </div>
           </div>
-        </div>
+        ) : (
+          <div className="grid-container sk-revealed">
+            <div className="sticky-column">
+              <div className="problem-meta">01 / THE COGNITIVE GAP</div>
+              <h2 className="section-heading">Why textbooks fail active minds.</h2>
+              <p className="problem-lead">
+                A static diagram requires mental simulation. You have to imagine how a variable behaves. This creates a massive cognitive burden. Interactive visuals shift that burden from the student to the platform.
+              </p>
+            </div>
+            <div className="scrolling-column">
+              <div className="comparison-card">
+                <div className="card-eyebrow">Traditional Textbook</div>
+                <h4 className="card-title">Three paragraphs of dry notation</h4>
+                <p className="card-desc">
+                  "Let a derivative be defined as the limit of the difference quotient as h approaches zero..." A formula is memorized for the exam, but the actual geometric meaning is entirely lost.
+                </p>
+                <div className="mock-ui text-mock">
+                  <div className="mock-line"></div>
+                  <div className="mock-line"></div>
+                  <div className="mock-line half"></div>
+                </div>
+              </div>
+              <div className="comparison-card">
+                <div className="card-eyebrow">Passive Video</div>
+                <h4 className="card-title">A six-minute passive timeline</h4>
+                <p className="card-desc">
+                  You watch a teacher draw lines on a digital whiteboard. You nod along, but your brain remains in receiver mode. Ten minutes later, you cannot reproduce the logic.
+                </p>
+                <div className="mock-ui video-mock">
+                  <div className="video-play-btn"></div>
+                  <div className="video-timeline"><div className="video-progress"></div></div>
+                </div>
+              </div>
+              <div className="comparison-card">
+                <div className="card-eyebrow">Answer Machines</div>
+                <h4 className="card-title">Instant solution, zero comprehension</h4>
+                <p className="card-desc">
+                  SaaS chatbots spit out step-by-step solutions instantly. You copy-paste it to finish your homework. You get the grade, but your understanding is non-existent.
+                </p>
+                <div className="mock-ui ai-mock">
+                  <div className="chat-bubble user">Solve x^2 - 4 = 0</div>
+                  <div className="chat-bubble ai">The answers are x = 2 and x = -2. Here are the steps...</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </section>
 
       {/* ===================== SECTION: INTERACTIVE SANDBOX ===================== */}
@@ -338,90 +415,143 @@ export default function Home() {
 
       {/* ===================== SECTION: PEDAGOGICAL INTEGRITY ===================== */}
       <section className="section-pedagogy" id="pedagogy">
-        <div className="pedagogy-container">
-          <div className="pedagogy-statement-block">
-            <div className="pedagogy-meta">03 / PEDAGOGICAL CORE</div>
-            <h2 className="pedagogy-large-statement">
-              We are structurally incapable of completing a student's homework.
-            </h2>
-            <p className="pedagogy-supporting-text">
-              Traditional learning tools solve questions for students, fostering dependency. Prologue does the opposite: it generates custom visual models. The student holds the controls and makes the final conclusions.
-            </p>
-          </div>
-
-          <div className="framework-grid">
-            {/* Feature 1 */}
-            <div className="framework-feature">
-              <div className="feature-num">01</div>
-              <h4 className="feature-title">Predict-Then-Check</h4>
-              <p className="feature-body">
-                Before the simulation snaps into its final state, the student manipulates a ghost element to predict where the regression line falls or the equilibrium shifts. Committing to an outcome first increases memory retention by 4x.
-              </p>
+        {!revealedSections.has('pedagogy') ? (
+          <div className="pedagogy-container">
+            <div className="pedagogy-statement-block">
+              <Sk w="20%" h={11} r={3} />
+              <Sk w="90%" h={48} r={8} mt={18} />
+              <Sk w="82%" h={48} r={8} mt={10} />
+              <Sk w="60%" h={48} r={8} mt={10} />
+              <Sk w="100%" h={15} r={4} mt={22} />
+              <Sk w="88%" h={15} r={4} mt={8} />
             </div>
-            {/* Feature 2 */}
-            <div className="framework-feature">
-              <div className="feature-num">02</div>
-              <h4 className="feature-title">Scaffolded Fading</h4>
-              <p className="feature-body">
-                Early visual sessions offer guided highlights and explanations. As the student demonstrates conceptual growth, the hints are quietly scaled back. Support is present when they stumble, and absent once they fly.
-              </p>
+            <div className="framework-grid">
+              {[0, 1, 2].map(i => (
+                <div key={i} className="framework-feature">
+                  <Sk w={36} h={26} r={4} />
+                  <Sk w="68%" h={18} r={4} mt={18} />
+                  <Sk w="100%" h={13} r={3} mt={14} />
+                  <Sk w="100%" h={13} r={3} mt={6} />
+                  <Sk w="78%" h={13} r={3} mt={6} />
+                  <Sk w="88%" h={13} r={3} mt={6} />
+                </div>
+              ))}
             </div>
-            {/* Feature 3 */}
-            <div className="framework-feature">
-              <div className="feature-num">03</div>
-              <h4 className="feature-title">Companion Explanations</h4>
-              <p className="feature-body">
-                Each visual comes with a brief, contextual explanation. Instead of generic textbook definitions, it guides the student on what controls to drag, showing them exactly where to focus their attention to feel the concept.
-              </p>
+            <div className="comparison-matrix-container">
+              <Sk w="36%" h={26} r={6} />
+              <div style={{ marginTop: 20, display: 'flex', flexDirection: 'column', gap: 4 }}>
+                {[0, 1, 2, 3, 4].map(i => <Sk key={i} w="100%" h={42} r={4} />)}
+              </div>
             </div>
           </div>
-
-          {/* Comparison Matrix */}
-          <div className="comparison-matrix-container">
-            <h3 className="comparison-title">A Different Class of Tool</h3>
-            <table className="comparison-table">
-              <thead>
-                <tr>
-                  <th>Capability</th>
-                  <th>Static Courseware</th>
-                  <th>ChatGPT / Gemini</th>
-                  <th>Prologue</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td className="feature-col">Concept Coverage</td>
-                  <td>Pre-built lessons only</td>
-                  <td>Text answers only</td>
-                  <td className="prologue-cell">Any academic topic</td>
-                </tr>
-                <tr>
-                  <td className="feature-col">Interaction Type</td>
-                  <td>Passive reading / video</td>
-                  <td>Boring chatbot prompt</td>
-                  <td className="prologue-cell">Draggable simulations</td>
-                </tr>
-                <tr>
-                  <td className="feature-col">Cheating Vulnerability</td>
-                  <td>Quiz answer keys leaked</td>
-                  <td>Highly vulnerable</td>
-                  <td className="prologue-cell">Zero (no solutions given)</td>
-                </tr>
-                <tr>
-                  <td className="feature-col">Custom Gen Speed</td>
-                  <td>Static (cannot scale)</td>
-                  <td>Fast but text-only</td>
-                  <td className="prologue-cell">Infinite live SVG outputs</td>
-                </tr>
-              </tbody>
-            </table>
+        ) : (
+          <div className="pedagogy-container sk-revealed">
+            <div className="pedagogy-statement-block">
+              <div className="pedagogy-meta">03 / PEDAGOGICAL CORE</div>
+              <h2 className="pedagogy-large-statement">
+                We are structurally incapable of completing a student's homework.
+              </h2>
+              <p className="pedagogy-supporting-text">
+                Traditional learning tools solve questions for students, fostering dependency. Prologue does the opposite: it generates custom visual models. The student holds the controls and makes the final conclusions.
+              </p>
+            </div>
+            <div className="framework-grid">
+              <div className="framework-feature">
+                <div className="feature-num">01</div>
+                <h4 className="feature-title">Predict-Then-Check</h4>
+                <p className="feature-body">
+                  Before the simulation snaps into its final state, the student manipulates a ghost element to predict where the regression line falls or the equilibrium shifts. Committing to an outcome first increases memory retention by 4x.
+                </p>
+              </div>
+              <div className="framework-feature">
+                <div className="feature-num">02</div>
+                <h4 className="feature-title">Scaffolded Fading</h4>
+                <p className="feature-body">
+                  Early visual sessions offer guided highlights and explanations. As the student demonstrates conceptual growth, the hints are quietly scaled back. Support is present when they stumble, and absent once they fly.
+                </p>
+              </div>
+              <div className="framework-feature">
+                <div className="feature-num">03</div>
+                <h4 className="feature-title">Companion Explanations</h4>
+                <p className="feature-body">
+                  Each visual comes with a brief, contextual explanation. Instead of generic textbook definitions, it guides the student on what controls to drag, showing them exactly where to focus their attention to feel the concept.
+                </p>
+              </div>
+            </div>
+            <div className="comparison-matrix-container">
+              <h3 className="comparison-title">A Different Class of Tool</h3>
+              <table className="comparison-table">
+                <thead>
+                  <tr>
+                    <th>Capability</th>
+                    <th>Static Courseware</th>
+                    <th>ChatGPT / Gemini</th>
+                    <th>Prologue</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="feature-col">Concept Coverage</td>
+                    <td>Pre-built lessons only</td>
+                    <td>Text answers only</td>
+                    <td className="prologue-cell">Any academic topic</td>
+                  </tr>
+                  <tr>
+                    <td className="feature-col">Interaction Type</td>
+                    <td>Passive reading / video</td>
+                    <td>Boring chatbot prompt</td>
+                    <td className="prologue-cell">Draggable simulations</td>
+                  </tr>
+                  <tr>
+                    <td className="feature-col">Cheating Vulnerability</td>
+                    <td>Quiz answer keys leaked</td>
+                    <td>Highly vulnerable</td>
+                    <td className="prologue-cell">Zero (no solutions given)</td>
+                  </tr>
+                  <tr>
+                    <td className="feature-col">Custom Gen Speed</td>
+                    <td>Static (cannot scale)</td>
+                    <td>Fast but text-only</td>
+                    <td className="prologue-cell">Infinite live SVG outputs</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
+        )}
       </section>
 
       {/* ===================== SECTION: CONCEPT MAP ===================== */}
       <section className="section-concept-map" id="concept-map">
-        <div className="concept-map-container">
+        {!revealedSections.has('concept-map') ? (
+          <div className="concept-map-container">
+            <div className="arch-header" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+              <Sk w="16%" h={11} r={3} />
+              <Sk w="52%" h={38} r={6} mt={18} />
+              <Sk w="64%" h={17} r={4} mt={14} />
+              <Sk w="50%" h={17} r={4} mt={8} />
+            </div>
+            <div className="concept-selectors">
+              {[0, 1, 2].map(i => <Sk key={i} w={118} h={36} r={20} />)}
+            </div>
+            <div className="concept-map-visual" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 32, paddingTop: 24 }}>
+              <Sk w={108} h={108} r={54} />
+              <div className="concept-cards-grid">
+                {[...Array(8)].map((_, i) => (
+                  <div key={i} className="subject-card">
+                    <Sk w={28} h={28} r={6} />
+                    <div style={{ flex: 1, paddingLeft: 8 }}>
+                      <Sk w="55%" h={12} r={3} mt={4} />
+                      <Sk w="80%" h={11} r={3} mt={8} />
+                      <Sk w="90%" h={11} r={3} mt={4} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        ) : (
+        <div className="concept-map-container sk-revealed">
           <div className="arch-header">
             <div className="arch-meta">04 / INTERDISCIPLINARY WEB</div>
             <h2 className="section-heading">Understand anything in context.</h2>
@@ -667,130 +797,172 @@ export default function Home() {
             </div>
           </div>
         </div>
+        )}
       </section>
 
       {/* ===================== SECTION: HOW IT WORKS ===================== */}
       <section className="section-how" id="safety">
-        <div className="how-inner">
-
-          <div className="how-label">05 / HOW IT WORKS</div>
-          <h2 className="how-heading">From question to understanding<br />in three steps.</h2>
-
-          <div className="how-steps">
-
-            <div className="how-step">
-              <div className="how-num">01</div>
-              <div className="how-step-divider"></div>
-              <h4 className="how-step-title">Ask anything.</h4>
-              <p className="how-step-desc">
-                Type any concept from your syllabus — a chapter, a formula, a historical event. No special syntax needed.
-              </p>
+        {!revealedSections.has('safety') ? (
+          <div className="how-inner">
+            <SkDark w="18%" h={11} r={3} />
+            <SkDark w="66%" h={38} r={6} mt={18} />
+            <SkDark w="52%" h={38} r={6} mt={10} />
+            <div className="how-steps" style={{ marginTop: 48 }}>
+              {[0, 1, 2].map((i) => (
+                <React.Fragment key={i}>
+                  {i > 0 && <div className="how-step-connector" />}
+                  <div className="how-step">
+                    <SkDark w={38} h={26} r={4} />
+                    <div style={{ width: '100%', height: 1, background: 'rgba(255,255,255,0.08)', margin: '16px 0' }} />
+                    <SkDark w="74%" h={20} r={4} mt={16} />
+                    <SkDark w="100%" h={13} r={3} mt={12} />
+                    <SkDark w="100%" h={13} r={3} mt={6} />
+                    <SkDark w="62%" h={13} r={3} mt={6} />
+                  </div>
+                </React.Fragment>
+              ))}
             </div>
-
-            <div className="how-step-connector">
-              <svg viewBox="0 0 60 12" width="60" height="12" fill="none">
-                <path d="M 0 6 L 52 6 M 46 2 L 52 6 L 46 10" stroke="rgba(250,247,242,0.25)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 48, paddingTop: 24, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+              <SkDark w="42%" h={15} r={4} />
+              <SkDark w={148} h={18} r={4} />
             </div>
-
-            <div className="how-step">
-              <div className="how-num">02</div>
-              <div className="how-step-divider"></div>
-              <h4 className="how-step-title">Get a live model.</h4>
-              <p className="how-step-desc">
-                Prologue generates a custom draggable simulation — not a video, not a wall of text. A living visual you can touch.
-              </p>
-            </div>
-
-            <div className="how-step-connector">
-              <svg viewBox="0 0 60 12" width="60" height="12" fill="none">
-                <path d="M 0 6 L 52 6 M 46 2 L 52 6 L 46 10" stroke="rgba(250,247,242,0.25)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </div>
-
-            <div className="how-step">
-              <div className="how-num">03</div>
-              <div className="how-step-divider"></div>
-              <h4 className="how-step-title">Learn by doing.</h4>
-              <p className="how-step-desc">
-                Drag elements, change variables, break the system. The concept clicks when you feel it, not when you read it.
-              </p>
-            </div>
-
           </div>
-
-          <div className="how-footer-strip">
-            <span className="how-footer-text">No answers. No shortcuts. Just understanding.</span>
-            <a href="https://app.prologuelearn.com/signup" className="how-cta-link">Reserve your seat &rarr;</a>
+        ) : (
+          <div className="how-inner sk-revealed">
+            <div className="how-label">05 / HOW IT WORKS</div>
+            <h2 className="how-heading">From question to understanding<br />in three steps.</h2>
+            <div className="how-steps">
+              <div className="how-step">
+                <div className="how-num">01</div>
+                <div className="how-step-divider"></div>
+                <h4 className="how-step-title">Ask anything.</h4>
+                <p className="how-step-desc">
+                  Type any concept from your syllabus — a chapter, a formula, a historical event. No special syntax needed.
+                </p>
+              </div>
+              <div className="how-step-connector">
+                <svg viewBox="0 0 60 12" width="60" height="12" fill="none">
+                  <path d="M 0 6 L 52 6 M 46 2 L 52 6 L 46 10" stroke="rgba(250,247,242,0.25)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+              <div className="how-step">
+                <div className="how-num">02</div>
+                <div className="how-step-divider"></div>
+                <h4 className="how-step-title">Get a live model.</h4>
+                <p className="how-step-desc">
+                  Prologue generates a custom draggable simulation — not a video, not a wall of text. A living visual you can touch.
+                </p>
+              </div>
+              <div className="how-step-connector">
+                <svg viewBox="0 0 60 12" width="60" height="12" fill="none">
+                  <path d="M 0 6 L 52 6 M 46 2 L 52 6 L 46 10" stroke="rgba(250,247,242,0.25)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+              <div className="how-step">
+                <div className="how-num">03</div>
+                <div className="how-step-divider"></div>
+                <h4 className="how-step-title">Learn by doing.</h4>
+                <p className="how-step-desc">
+                  Drag elements, change variables, break the system. The concept clicks when you feel it, not when you read it.
+                </p>
+              </div>
+            </div>
+            <div className="how-footer-strip">
+              <span className="how-footer-text">No answers. No shortcuts. Just understanding.</span>
+              <a href="https://app.prologuelearn.com/signup" className="how-cta-link">Reserve your seat &rarr;</a>
+            </div>
           </div>
-
-        </div>
+        )}
       </section>
 
       {/* ===================== SECTION: CTA / JOIN WAITLIST ===================== */}
       <section className="section-cta" id="cta">
-        <div className="cta-inner">
-          <div className="cta-grid">
-            <div className="cta-copy">
-              <div className="cta-meta font-serif">Inquiry No. 1</div>
-              <h2 className="cta-heading">Enter the Next Chapter.</h2>
-              <p className="cta-sub">
-                Join the waitlist to receive access to the active learning workbook. Discover the difference between reading and understanding.
-              </p>
-            </div>
-            <div className="cta-form-container">
-              <div id="waitlist-success" role="alert" aria-live="polite" className="waitlist-success-message" style={{ display: waitlistSubmitted ? 'block' : 'none' }}>
-                <h4>Thank You.</h4>
-                <p>Your spot has been reserved. We will reach out to <strong>{waitlistEmail}</strong> shortly.</p>
+        {!revealedSections.has('cta') ? (
+          <div className="cta-inner">
+            <div className="cta-grid">
+              <div className="cta-copy">
+                <SkDark w="24%" h={11} r={3} />
+                <SkDark w="74%" h={42} r={6} mt={18} />
+                <SkDark w="62%" h={42} r={6} mt={10} />
+                <SkDark w="100%" h={14} r={4} mt={22} />
+                <SkDark w="90%" h={14} r={4} mt={8} />
+                <SkDark w="72%" h={14} r={4} mt={8} />
               </div>
-              <form className="cta-form" id="waitlist-form" onSubmit={handleWaitlistSubmit} style={{ display: waitlistSubmitted ? 'none' : 'block' }}>
-                <div className="form-group">
-                  <label htmlFor="student-name">Your Name</label>
-                  <input
-                    type="text"
-                    id="student-name"
-                    placeholder="E.g., Alan Turing"
-                    value={waitlistName}
-                    onChange={(e) => setWaitlistName(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="student-email">Email Address</label>
-                  <input
-                    type="email"
-                    id="student-email"
-                    placeholder="E.g., alan@domain.edu"
-                    value={waitlistEmail}
-                    onChange={(e) => setWaitlistEmail(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="student-role">Learning Role</label>
-                  <select
-                    id="student-role"
-                    value={waitlistRole}
-                    onChange={(e) => setWaitlistRole(e.target.value)}
-                    required
-                  >
-                    <option value="" disabled>Select your profile</option>
-                    <option value="student">Student</option>
-                    <option value="educator">Educator / Teacher</option>
-                    <option value="parent">Parent</option>
-                    <option value="administrator">School Administrator</option>
-                  </select>
-                </div>
-                <button type="submit" className="btn btn-primary btn-block" id="form-submit-btn" disabled={isSubmitting}>
-                  {isSubmitting ? 'Sending...' : 'Reserve Waitlist Spot'}
-                </button>
-                <div id="form-error" role="alert" aria-live="polite" style={{ marginTop: 16, padding: '12px 16px', borderRadius: 4, fontSize: '0.9rem', fontWeight: 500, textAlign: 'center', background: 'rgba(201,59,43,0.12)', border: '1px solid rgba(201,59,43,0.3)', color: '#C93B2B', display: submitError ? 'block' : 'none' }}>
-                  Something went wrong — please try again.
-                </div>
-              </form>
+              <div className="cta-form-container">
+                {[0, 1, 2].map(i => (
+                  <div key={i} className="form-group">
+                    <SkDark w="30%" h={13} r={3} />
+                    <SkDark w="100%" h={44} r={6} mt={8} />
+                  </div>
+                ))}
+                <SkDark w="100%" h={52} r={8} mt={20} />
+              </div>
             </div>
           </div>
-        </div>
+        ) : (
+          <div className="cta-inner sk-revealed">
+            <div className="cta-grid">
+              <div className="cta-copy">
+                <div className="cta-meta font-serif">Inquiry No. 1</div>
+                <h2 className="cta-heading">Enter the Next Chapter.</h2>
+                <p className="cta-sub">
+                  Join the waitlist to receive access to the active learning workbook. Discover the difference between reading and understanding.
+                </p>
+              </div>
+              <div className="cta-form-container">
+                <div id="waitlist-success" role="alert" aria-live="polite" className="waitlist-success-message" style={{ display: waitlistSubmitted ? 'block' : 'none' }}>
+                  <h4>Thank You.</h4>
+                  <p>Your spot has been reserved. We will reach out to <strong>{waitlistEmail}</strong> shortly.</p>
+                </div>
+                <form className="cta-form" id="waitlist-form" onSubmit={handleWaitlistSubmit} style={{ display: waitlistSubmitted ? 'none' : 'block' }}>
+                  <div className="form-group">
+                    <label htmlFor="student-name">Your Name</label>
+                    <input
+                      type="text"
+                      id="student-name"
+                      placeholder="E.g., Alan Turing"
+                      value={waitlistName}
+                      onChange={(e) => setWaitlistName(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="student-email">Email Address</label>
+                    <input
+                      type="email"
+                      id="student-email"
+                      placeholder="E.g., alan@domain.edu"
+                      value={waitlistEmail}
+                      onChange={(e) => setWaitlistEmail(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="student-role">Learning Role</label>
+                    <select
+                      id="student-role"
+                      value={waitlistRole}
+                      onChange={(e) => setWaitlistRole(e.target.value)}
+                      required
+                    >
+                      <option value="" disabled>Select your profile</option>
+                      <option value="student">Student</option>
+                      <option value="educator">Educator / Teacher</option>
+                      <option value="parent">Parent</option>
+                      <option value="administrator">School Administrator</option>
+                    </select>
+                  </div>
+                  <button type="submit" className="btn btn-primary btn-block" id="form-submit-btn" disabled={isSubmitting}>
+                    {isSubmitting ? 'Sending...' : 'Reserve Waitlist Spot'}
+                  </button>
+                  <div id="form-error" role="alert" aria-live="polite" style={{ marginTop: 16, padding: '12px 16px', borderRadius: 4, fontSize: '0.9rem', fontWeight: 500, textAlign: 'center', background: 'rgba(201,59,43,0.12)', border: '1px solid rgba(201,59,43,0.3)', color: '#C93B2B', display: submitError ? 'block' : 'none' }}>
+                    Something went wrong — please try again.
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        )}
       </section>
 
       {/* ===================== FOOTER ===================== */}
