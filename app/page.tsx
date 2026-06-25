@@ -42,7 +42,6 @@ export default function Home() {
     const SECTIONS = ['hero', 'problem', 'pedagogy', 'concept-map', 'safety', 'cta'];
     const timers: ReturnType<typeof setTimeout>[] = [];
     const observers: IntersectionObserver[] = [];
-
     SECTIONS.forEach((id) => {
       const el = document.getElementById(id);
       if (!el) return;
@@ -50,7 +49,7 @@ export default function Home() {
         if (entries[0].isIntersecting) {
           const t = setTimeout(() => {
             setRevealedSections(prev => { const next = new Set(prev); next.add(id); return next; });
-          }, 500);
+          }, 300);
           timers.push(t);
           obs.unobserve(el);
         }
@@ -58,11 +57,7 @@ export default function Home() {
       obs.observe(el);
       observers.push(obs);
     });
-
-    return () => {
-      timers.forEach(clearTimeout);
-      observers.forEach(obs => obs.disconnect());
-    };
+    return () => { timers.forEach(clearTimeout); observers.forEach(obs => obs.disconnect()); };
   }, []);
 
   const conceptData = {
@@ -217,8 +212,8 @@ export default function Home() {
             <a href="#pedagogy" id="link-why">Why Prologue</a>
           </div>
           <div className="nav-actions">
-            <a href="https://app.prologuelearn.com/login" className="nav-login" id="link-login">Log In</a>
-            <a href="https://app.prologuelearn.com/signup" className="nav-btn" id="link-cta">Get Started</a>
+            <a href="https://app.prologuelearn.com/login" className="nav-login" id="link-login" onClick={(e) => { e.preventDefault(); window.location.replace("https://app.prologuelearn.com/login") }}>Log In</a>
+            <a href="https://app.prologuelearn.com/signup" className="nav-btn" id="link-cta" onClick={(e) => { e.preventDefault(); window.location.replace("https://app.prologuelearn.com/signup") }}>Get Started</a>
           </div>
           <button
             className={`nav-hamburger${navOpen ? ' open' : ''}`}
@@ -234,12 +229,11 @@ export default function Home() {
           <a href="#sandbox" onClick={() => setNavOpen(false)}>Explore</a>
           <a href="#pedagogy" onClick={() => setNavOpen(false)}>Why Prologue</a>
           <a href="#safety" onClick={() => setNavOpen(false)}>How It Works</a>
-          <div className="nav-mobile-actions">
-            <a href="https://app.prologuelearn.com/login" className="nav-login" onClick={() => setNavOpen(false)}>Log In</a>
-            <a href="https://app.prologuelearn.com/signup" className="nav-btn" onClick={() => setNavOpen(false)}>Get Started</a>
-          </div>
+          <a href="https://app.prologuelearn.com/login" className="nav-mobile-login" onClick={(e) => { e.preventDefault(); setNavOpen(false); window.location.replace("https://app.prologuelearn.com/login") }}>Log In</a>
+          <a href="https://app.prologuelearn.com/signup" className="nav-mobile-cta" onClick={(e) => { e.preventDefault(); setNavOpen(false); window.location.replace("https://app.prologuelearn.com/signup") }}>Get Started</a>
         </div>
       </nav>
+      <div className={`nav-backdrop${navOpen ? ' open' : ''}`} onClick={() => setNavOpen(false)} aria-hidden="true" />
 
       {/* ===================== HERO SECTION ===================== */}
       <header className="section-hero" id="hero">
@@ -275,8 +269,9 @@ export default function Home() {
                   </span>
                   <span className="btn-text">Begin the Inquiry</span>
                 </a>
-                <a href="https://app.prologuelearn.com/signup" className="btn btn-secondary" id="hero-btn-reserve">Reserve Seat</a>
+                <a href="https://app.prologuelearn.com/signup" className="btn btn-secondary" id="hero-btn-reserve" onClick={(e) => { e.preventDefault(); window.location.replace("https://app.prologuelearn.com/signup") }}>Reserve Seat</a>
               </div>
+
             </div>
           )}
         </div>
@@ -511,27 +506,27 @@ export default function Home() {
                 <tbody>
                   <tr>
                     <td className="feature-col">Concept Coverage</td>
-                    <td>Pre-built lessons only</td>
-                    <td>Text answers only</td>
-                    <td className="prologue-cell">Any academic topic</td>
+                    <td data-label="Static Courseware">Pre-built lessons only</td>
+                    <td data-label="ChatGPT / Gemini">Text answers only</td>
+                    <td data-label="Prologue" className="prologue-cell">Any academic topic</td>
                   </tr>
                   <tr>
                     <td className="feature-col">Interaction Type</td>
-                    <td>Passive reading / video</td>
-                    <td>Boring chatbot prompt</td>
-                    <td className="prologue-cell">Draggable simulations</td>
+                    <td data-label="Static Courseware">Passive reading / video</td>
+                    <td data-label="ChatGPT / Gemini">Boring chatbot prompt</td>
+                    <td data-label="Prologue" className="prologue-cell">Draggable simulations</td>
                   </tr>
                   <tr>
                     <td className="feature-col">Cheating Vulnerability</td>
-                    <td>Quiz answer keys leaked</td>
-                    <td>Highly vulnerable</td>
-                    <td className="prologue-cell">Zero (no solutions given)</td>
+                    <td data-label="Static Courseware">Quiz answer keys leaked</td>
+                    <td data-label="ChatGPT / Gemini">Highly vulnerable</td>
+                    <td data-label="Prologue" className="prologue-cell">Zero (no solutions given)</td>
                   </tr>
                   <tr>
                     <td className="feature-col">Custom Gen Speed</td>
-                    <td>Static (cannot scale)</td>
-                    <td>Fast but text-only</td>
-                    <td className="prologue-cell">Infinite live SVG outputs</td>
+                    <td data-label="Static Courseware">Static (cannot scale)</td>
+                    <td data-label="ChatGPT / Gemini">Fast but text-only</td>
+                    <td data-label="Prologue" className="prologue-cell">Infinite live SVG outputs</td>
                   </tr>
                 </tbody>
               </table>
@@ -888,7 +883,7 @@ export default function Home() {
             </div>
             <div className="how-footer-strip">
               <span className="how-footer-text">No answers. No shortcuts. Just understanding.</span>
-              <a href="https://app.prologuelearn.com/signup" className="how-cta-link">Reserve your seat &rarr;</a>
+              <a href="https://app.prologuelearn.com/signup" className="how-cta-link" onClick={(e) => { e.preventDefault(); window.location.replace("https://app.prologuelearn.com/signup") }}>Reserve your seat &rarr;</a>
             </div>
           </div>
         )}
