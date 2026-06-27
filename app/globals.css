@@ -117,7 +117,7 @@ p {
   font-family: var(--font-sans);
   font-size: 0.95rem;
   font-weight: 500;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
   text-decoration: none;
   transition: transform var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast);
@@ -330,7 +330,7 @@ p {
   font-size: 1rem;
   font-weight: 500;
   padding: 10px 22px;
-  border-radius: 4px;
+  border-radius: 6px;
   white-space: nowrap;
   transition: background-color var(--transition-fast), transform var(--transition-fast);
 }
@@ -1987,10 +1987,18 @@ p {
   flex-direction: column;
   z-index: 998;
   box-shadow: 0 8px 28px rgba(30, 28, 26, 0.09);
-  transform: translateY(-108%);
-  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-8px);
+  transition: transform 0.25s ease, opacity 0.25s ease, visibility 0.25s;
 }
-.nav-mobile-menu.open { transform: translateY(0); }
+.nav-mobile-menu.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
 
 .nav-mobile-menu a {
   display: block;
@@ -2002,24 +2010,42 @@ p {
   border-bottom: 1px solid var(--line-color);
   transition: color var(--transition-fast);
 }
-.nav-mobile-menu a:last-of-type { border-bottom: none; }
+.nav-mobile-menu a.nav-mobile-login,
+.nav-mobile-menu a.nav-mobile-cta { border-bottom: none; }
 .nav-mobile-menu a:hover { color: var(--vermillion); }
 
-.nav-mobile-actions {
-  display: flex;
-  gap: 12px;
-  margin-top: 16px;
-  align-items: center;
+/* backdrop for close-on-outside-tap — always in DOM, toggled via class */
+.nav-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 997;
+  background: rgba(28, 25, 23, 0.18);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.2s ease, visibility 0.2s;
 }
-.nav-mobile-actions .nav-login {
-  border: none !important;
-  padding: 0;
+.nav-backdrop.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.nav-mobile-login {
+  font-weight: 600;
+  color: var(--ink) !important;
+}
+.nav-mobile-cta {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  background: var(--vermillion);
+  color: var(--paper) !important;
+  border-radius: 6px;
   font-weight: 600;
   font-size: 0.95rem;
-}
-.nav-mobile-actions .nav-btn {
-  padding: 10px 20px;
-  font-size: 0.9rem;
+  text-decoration: none;
+  border-bottom: none !important;
 }
 
 /* ════════════════════════════════════════════════════════
@@ -2031,11 +2057,23 @@ p {
   .nav-actions { display: none; }
   .nav-mobile-menu { display: flex; }
 
+  /* ── Nav mobile menu tap targets (44px min) ── */
+  .nav-mobile-menu a {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+  .nav-mobile-cta {
+    min-height: 44px;
+    padding: 0 20px;
+    margin-top: 8px;
+  }
+
   /* ── Hero ── */
   .hero-container { padding: 0 24px; text-align: center; }
-  .hero-title { font-size: clamp(2rem, 7.5vw, 3rem); }
+  .hero-title { font-size: 2rem; }
   .hero-subtitle { font-size: 1.05rem; margin-bottom: 28px; }
-  .hero-meta { font-size: 0.68rem; letter-spacing: 0.18em; }
+  .hero-meta { font-size: 11px; letter-spacing: 0.18em; }
   .hero-cta-group {
     flex-direction: column;
     align-items: center;
@@ -2047,6 +2085,52 @@ p {
     width: 100%;
     max-width: 340px;
     justify-content: center;
+  }
+
+  /* ── Comparison table → stacked cards ── */
+  .comparison-table thead { display: none; }
+  .comparison-table tbody { display: block; }
+  .comparison-table tr {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--line-color);
+    border: 1px solid var(--line-color);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .comparison-table td {
+    display: block;
+    padding: 10px 14px;
+    background: var(--paper);
+    font-size: 0.88rem;
+  }
+  .comparison-table td.feature-col {
+    grid-column: 1 / -1;
+    background: var(--ink);
+    color: var(--paper);
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 8px 14px;
+  }
+  .comparison-table td[data-label]::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-faded, #888);
+    margin-bottom: 4px;
+    font-family: var(--font-mono);
+  }
+  .comparison-table td.prologue-cell {
+    background: rgba(192, 57, 43, 0.06);
+    color: var(--vermillion);
+    font-weight: 600;
   }
 
   /* ── Sim canvas — scale down to fit screen ── */
@@ -2073,6 +2157,63 @@ p {
 
   /* ── CTA grid single-col ── */
   .cta-grid { grid-template-columns: 1fr; gap: 32px; }
+
+  /* ── 1. Section meta labels ── */
+  .problem-meta,
+  .sandbox-meta,
+  .pedagogy-meta,
+  .how-label,
+  .cta-meta,
+  .arch-meta {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+  }
+
+  /* ── 2. Section h2 headings ── */
+  .section-heading { font-size: 1.6rem; }
+  .pedagogy-large-statement { font-size: 1.6rem; }
+  .how-heading { font-size: 1.6rem !important; }
+
+  /* ── 4. Pedagogical Core steps — single column ── */
+  .framework-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0;
+  }
+  .framework-feature {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--line-color);
+  }
+  .framework-feature:last-child { border-bottom: none; }
+
+  /* ── 5. How It Works steps — stack vertically ── */
+  .how-steps {
+    flex-direction: column;
+    gap: 0;
+  }
+  .how-step { width: 100%; }
+  .how-step-connector {
+    transform: rotate(90deg);
+    margin: 8px auto;
+  }
+
+  /* ── 9. Footer single column ── */
+  .footer-links-grid {
+    grid-template-columns: 1fr !important;
+    gap: 2rem;
+  }
+
+  /* ── 10. General section spacing ── */
+  .section-problem,
+  .section-sandbox,
+  .section-pedagogy,
+  .section-concept-map,
+  .section-how,
+  .section-cta {
+    padding-top: 3rem !important;
+    padding-bottom: 3rem !important;
+    padding-left: 1.25rem !important;
+    padding-right: 1.25rem !important;
+  }
 }
 
 /* ════════════════════════════════════════════════════════
@@ -2089,7 +2230,7 @@ p {
 
   /* ── Hero ── */
   .section-hero { padding-top: 88px; }
-  .hero-title { font-size: clamp(1.8rem, 8vw, 2.4rem); letter-spacing: -0.01em; }
+  .hero-title { font-size: 2rem; letter-spacing: -0.01em; }
   .hero-subtitle { font-size: 0.97rem; line-height: 1.55; }
 
   /* ── Sim sidebar ── */
@@ -2099,17 +2240,7 @@ p {
   .control-group label { font-size: 0.82rem; }
   .telemetry-row { font-size: 0.82rem; }
 
-  /* ── Comparison table — horizontal scroll ── */
-  .comparison-matrix-container {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    margin-left: -16px;
-    margin-right: -16px;
-    padding: 0 16px;
-  }
-  .comparison-table { min-width: 520px; font-size: 0.82rem; }
-  .comparison-table th,
-  .comparison-table td { padding: 10px 12px; }
+  /* comparison table — stacked cards already applied at 768px, no scroll needed */
 
   /* ── Concept map cards single-col ── */
   .concept-cards-grid { grid-template-columns: 1fr !important; max-width: 100% !important; }
